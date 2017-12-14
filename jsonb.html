@@ -66,7 +66,7 @@
         <tr>
             <td>no identation</td>
             <td>select '{"0":0, "1":1, "0":2}'::json;</td>
-            <td>{"0":0, "1":1,\ "0":2}</td>
+            <td>{"0":0, "1":1, "0":2}</td>
             <td>'{"1":1, "0":2}'</td>
         </tr>
     </tbody>
@@ -90,6 +90,82 @@
 
 <p>Where <em>"testnew"</em> is used to test jsonb and <em>"testold"</em> is used to test json so that we can clearly define what were the results of jsonb and json.
 ![benchmark results][transform]</p>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+     var data;
+     var chart;
+
+      // Load the Visualization API and the piechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+        data = new google.visualization.DataTable();
+        data.addColumn('number', 'json size');
+        data.addColumn('number', 'latency_old');
+        data.addColumn('number', 'latency_new');
+        data.addRows([
+          [1,       7.208,      2.77],
+          [1001,    53.411,     9.285],
+          [2001,    103.929,    16.214],
+          [3001,    157.989,    25.814],
+          [4001,    204.865,    31.78],
+          [5001,    259.243,    40.423],
+          [6001,    309.912,    49.886],
+          [7001,    359.798,    53.999],
+          [8001,    414.597,    63.592],
+          [9001,    481.893,    74.574],
+          [10001,   520.906,    80.629],
+          [11001,   573.934,    87.01],
+          [12001,   630.937,    94.384],
+          [13001,   686.475,    103.035],
+          [14001,   744.054,    113.548],
+          [15001,   798.305,    116.316],
+          [16001,   861.136,    126.024],
+          [17001,   916.432,    148.425],
+          [18001,   979.769,    151.548],
+          [19001,   1050.776,   161.134],
+          [20001,   1084.992,   169.715],
+          [21001,   1149.904,   181.003],
+          [22001,   1189.699,   185.644],
+          [23001,   1237.404,   192.815],
+          [24001,   1298.407,   199.408],
+          [25001,   1348.316,   209.455],
+          [26001,   1431.793,   221.336],
+          [27001,   1474.972,   219.977],
+          [28001,   1510.263,   225.925],
+          [29001,   1574.153,   241.067]
+        ]);
+
+        // Set chart options
+        var options = {
+            title:'Differences in latency',
+            curveType: 'function',
+            legend: { position: 'bottom' }
+            };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        // google.visualization.events.addListener(chart, 'select', selectHandler);
+        chart.draw(data, options);
+      }
+
+      function selectHandler() {
+        var selectedItem = chart.getSelection()[0];
+        var value = data.getValue(selectedItem.row, 0);
+        alert('The user selected ' + value);
+      }
+
+</script>
+
+<div id="chart_div" style="width:400; height:300"></div>
+
 <h2>Future work:</h2>
     </div><!-- /.entry-content -->
 
