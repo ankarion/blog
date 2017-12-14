@@ -31,8 +31,8 @@ It looks like a usual json except for some internal representation differences:
         </tr>
         <tr>
             <td>no identation</td>
-            <td>select '{"0":0, "1":1, `` `` `` `` `` ``"0":2}'::json;</td>
-            <td>{"0":0, "1":1, `` `` `` `` `` ``"0":2}</td>
+            <td>select '{"0":0, "1":1, "0":2}'::json;</td>
+            <td>{"0":0, "1":1,\ "0":2}</td>
             <td>'{"1":1, "0":2}'</td>
         </tr>
     </tbody>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog of Ankarion - PostgreSQL</title><link href="http://ankarion.github.io/blog/" rel="alternate"></link><link href="http://ankarion.github.io/blog/feeds/postgresql.atom.xml" rel="self"></link><id>http://ankarion.github.io/blog/</id><updated>2017-12-14T12:20:00+01:00</updated><entry><title>Jsonb</title><link href="http://ankarion.github.io/blog/jsonb.html" rel="alternate"></link><published>2017-12-14T12:20:00+01:00</published><updated>2017-12-14T12:20:00+01:00</updated><author><name>Bykov Anthony</name></author><id>tag:ankarion.github.io,2017-12-14:/blog/jsonb.html</id><summary type="html">&lt;h1&gt;Jsonb&lt;/h1&gt;
+&lt;h2&gt;Jsonb outline:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;definition&lt;/li&gt;
+&lt;li&gt;usage&lt;/li&gt;
+&lt;li&gt;benchmarks&lt;/li&gt;
+&lt;li&gt;future work&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Definition&lt;/h2&gt;
+&lt;p&gt;It looks like a usual json except for some internal representation differences:&lt;/p&gt;
+&lt;table class="table-bordered" border="1"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Comment&lt;/th&gt;
+            &lt;th&gt;Example&lt;/th&gt;
+            &lt;th&gt;Json&lt;/th&gt;
+            &lt;th&gt;Jsonb&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;unique keys&lt;/td&gt;
+            &lt;td&gt;select '{"0":0, "1":1,"0":2}'::json;&lt;/td&gt;
+            &lt;td&gt;{"0":0, "1":1, "0":2}&lt;/td&gt;
+            &lt;td&gt;'{"1":1, "0":2}'&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;no identation&lt;/td&gt;
+            &lt;td&gt;select '{"0":0 …&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</summary><content type="html">&lt;h1&gt;Jsonb&lt;/h1&gt;
+&lt;h2&gt;Jsonb outline:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;definition&lt;/li&gt;
+&lt;li&gt;usage&lt;/li&gt;
+&lt;li&gt;benchmarks&lt;/li&gt;
+&lt;li&gt;future work&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Definition&lt;/h2&gt;
+&lt;p&gt;It looks like a usual json except for some internal representation differences:&lt;/p&gt;
+&lt;table class="table-bordered" border="1"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Comment&lt;/th&gt;
+            &lt;th&gt;Example&lt;/th&gt;
+            &lt;th&gt;Json&lt;/th&gt;
+            &lt;th&gt;Jsonb&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;unique keys&lt;/td&gt;
+            &lt;td&gt;select '{"0":0, "1":1,"0":2}'::json;&lt;/td&gt;
+            &lt;td&gt;{"0":0, "1":1, "0":2}&lt;/td&gt;
+            &lt;td&gt;'{"1":1, "0":2}'&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;no identation&lt;/td&gt;
+            &lt;td&gt;select '{"0":0, "1":1, `` `` `` `` `` ``"0":2}'::json;&lt;/td&gt;
+            &lt;td&gt;{"0":0, "1":1, `` `` `` `` `` ``"0":2}&lt;/td&gt;
+            &lt;td&gt;'{"1":1, "0":2}'&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2&gt;Usage&lt;/h2&gt;
+&lt;p&gt;I will suggest to use jsonb in case when your tables are sparse.&lt;/p&gt;
+&lt;h2&gt;Benchmarks:&lt;/h2&gt;
+&lt;h3&gt;without jsonb at all&lt;/h3&gt;
+&lt;p&gt;The key concept of this point is to check how much space and time can jsonb save if the data in database is hardly structured.&lt;/p&gt;
+&lt;h3&gt;json vs jsonb&lt;/h3&gt;
+&lt;p&gt;Let's assume that we all agree that json and jsonb are both useful. But what is better(faster)? This question will be answered in the following benchmark. &lt;a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py"&gt;Here&lt;/a&gt; you can find a python script I used to generate tests. Actually, all of the benchmark tests look like &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;select&lt;/span&gt; &lt;span class="n"&gt;testold&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;{}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;)::&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;or&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;select&lt;/span&gt; &lt;span class="n"&gt;testnew&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;{}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;jsonb&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Where &lt;em&gt;"testnew"&lt;/em&gt; is used to test jsonb and &lt;em&gt;"testold"&lt;/em&gt; is used to test json so that we can clearly define what were the results of jsonb and json.
+![benchmark results][transform]&lt;/p&gt;
+&lt;h2&gt;Future work:&lt;/h2&gt;</content></entry></feed>
