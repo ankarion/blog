@@ -4,11 +4,11 @@ from __future__ import unicode_literals
 
 AUTHOR = u'Bykov Anthony'
 SITENAME = u'Blog of Ankarion'
-SITEURL = ''
+SITEURL = 'ankarion.github.io/blog'
 
 PATH = 'content'
 
-TIMEZONE = 'Europe/Moscow'
+TIMEZONE = 'Europe/Paris'
 
 DEFAULT_LANG = u'en'
 
