@@ -55,8 +55,8 @@
         &lt;/tr&gt;
         &lt;tr&gt;
             &lt;td&gt;no identation&lt;/td&gt;
-            &lt;td&gt;select '{"0":0, "1":1, `` `` `` `` `` ``"0":2}'::json;&lt;/td&gt;
-            &lt;td&gt;{"0":0, "1":1, `` `` `` `` `` ``"0":2}&lt;/td&gt;
+            &lt;td&gt;select '{"0":0, "1":1, "0":2}'::json;&lt;/td&gt;
+            &lt;td&gt;{"0":0, "1":1,\ "0":2}&lt;/td&gt;
             &lt;td&gt;'{"1":1, "0":2}'&lt;/td&gt;
         &lt;/tr&gt;
     &lt;/tbody&gt;
