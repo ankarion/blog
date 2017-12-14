@@ -66,7 +66,7 @@ Let's imagine that we have a beatiful project with data in [3NF][3NF], everythin
 
 <div id="usage_table"></div>
 
-And suddenly our customer wants data science. Not the offline one - he wants it hot and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands.
+And suddenly our customer wants data science. Not the offline one - he wants it hot and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands ([pd][pandas]). After we've installed it (via [pd_tutor][installation guide])
 	
 # Benchmarks:
 ## without jsonb at all
@@ -171,3 +171,5 @@ Where *"testnew"* is used to test jsonb and *"testold"* is used to test json so 
 
 [//]: <> (articles)
 [3NF]: https://en.wikipedia.org/wiki/Third_normal_form
+[pd]: https://pandas.pydata.org/
+[pd_tutor]: 
