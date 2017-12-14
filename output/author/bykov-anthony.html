@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Blog of Ankarion - Bykov Anthony</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Blog of Ankarion </a></h1>
+                <nav><ul>
+                    <li><a href="/category/postgresql.html">PostgreSQL</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="/jsonb.html">Jsonb</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-12-14T12:20:00+03:00">
+                Published: Чт 14 Декабрь 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/bykov-anthony.html">Bykov Anthony</a>
+        </address>
+<p>In <a href="/category/postgresql.html">PostgreSQL</a>.</p>
+
+</footer><!-- /.post-info --><h1>Jsonb</h1>
+<h2>Jsonb outline:</h2>
+<ul>
+<li>definition</li>
+<li>usage</li>
+<li>benchmarks</li>
+<li>future work</li>
+</ul>
+<h2>Definition</h2>
+<p>It looks like a usual json except for some internal representation differences:</p>
+<table class="table-bordered" border="1">
+    <thead>
+        <tr>
+            <th>Comment</th>
+            <th>Example</th>
+            <th>Json</th>
+            <th>Jsonb</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>unique keys</td>
+            <td>select '{"0":0, "1":1,"0":2}'::json;</td>
+            <td>{"0":0, "1":1, "0":2}</td>
+            <td>'{"1":1, "0":2}'</td>
+        </tr>
+        <tr>
+            <td>no identation</td>
+            <td>select '{"0":0, "1":1, `` `` `` `` `` ``"0":2}'::json;</td>
+            <td>{"0":0, "1":1, `` `` `` `` `` ``"0":2}</td>
+            <td>'{"1":1, "0":2}'</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Usage</h2>
+<p>I will suggest to use jsonb in case when your tables are sparse.</p>
+<h2>Benchmarks:</h2>
+<h3>without jsonb at all</h3>
+<p>The key concept of this point is to check how much space and time can jsonb save if the data in database is hardly structured.</p>
+<h3>json vs jsonb</h3>
+<p>Let's assume that we all agree that json and jsonb are both useful. But what is better(faster)? This question will be answered in the following benchmark. <a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py">Here</a> you can find a python script I used to generate tests. Actually, all of the benchmark tests look like </p>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">testold</span><span class="p">(</span><span class="s1">&#39;{}&#39;</span><span class="p">::</span><span class="n">json</span><span class="p">)::</span><span class="n">json</span><span class="p">;</span>
+</pre></div>
+
+
+<p>or</p>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">testnew</span><span class="p">(</span><span class="s1">&#39;{}&#39;</span><span class="p">::</span><span class="n">jsonb</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Where <em>"testnew"</em> is used to test jsonb and <em>"testold"</em> is used to test json so that we can clearly define what were the results of jsonb and json.
+![benchmark results][transform]</p>
+<h2>Future work:</h2>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
