@@ -1,73 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog of Ankarion</title><link href="https://ankarion.github.io/blog/" rel="alternate"></link><link href="https://ankarion.github.io/blog/feeds/all.atom.xml" rel="self"></link><id>https://ankarion.github.io/blog/</id><updated>2017-12-14T12:20:00+01:00</updated><entry><title>Jsonb</title><link href="https://ankarion.github.io/blog/jsonb.html" rel="alternate"></link><published>2017-12-14T12:20:00+01:00</published><updated>2017-12-14T12:20:00+01:00</updated><author><name>Bykov Anthony</name></author><id>tag:ankarion.github.io,2017-12-14:/blog/jsonb.html</id><summary type="html">&lt;h1&gt;Jsonb&lt;/h1&gt;
-&lt;h2&gt;Jsonb outline:&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;definition&lt;/li&gt;
-&lt;li&gt;usage&lt;/li&gt;
-&lt;li&gt;benchmarks&lt;/li&gt;
-&lt;li&gt;future work&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;Definition&lt;/h2&gt;
-&lt;p&gt;It looks like a usual json except for some internal representation differences:&lt;/p&gt;
-&lt;table class="table-bordered" border="1"&gt;
-    &lt;thead&gt;
-        &lt;tr&gt;
-            &lt;th&gt;Comment&lt;/th&gt;
-            &lt;th&gt;Example&lt;/th&gt;
-            &lt;th&gt;Json&lt;/th&gt;
-            &lt;th&gt;Jsonb&lt;/th&gt;
-        &lt;/tr&gt;
-    &lt;/thead&gt;
-    &lt;tbody&gt;
-        &lt;tr&gt;
-            &lt;td&gt;unique keys&lt;/td&gt;
-            &lt;td&gt;select '{"0":0, "1":1,"0":2}'::json;&lt;/td&gt;
-            &lt;td&gt;{"0":0, "1":1, "0":2}&lt;/td&gt;
-            &lt;td&gt;'{"1":1, "0":2}'&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-            &lt;td&gt;no identation&lt;/td&gt;
-            &lt;td&gt;select '{"0":0 …&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</summary><content type="html">&lt;h1&gt;Jsonb&lt;/h1&gt;
-&lt;h2&gt;Jsonb outline:&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;definition&lt;/li&gt;
-&lt;li&gt;usage&lt;/li&gt;
-&lt;li&gt;benchmarks&lt;/li&gt;
-&lt;li&gt;future work&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;Definition&lt;/h2&gt;
-&lt;p&gt;It looks like a usual json except for some internal representation differences:&lt;/p&gt;
-&lt;table class="table-bordered" border="1"&gt;
-    &lt;thead&gt;
-        &lt;tr&gt;
-            &lt;th&gt;Comment&lt;/th&gt;
-            &lt;th&gt;Example&lt;/th&gt;
-            &lt;th&gt;Json&lt;/th&gt;
-            &lt;th&gt;Jsonb&lt;/th&gt;
-        &lt;/tr&gt;
-    &lt;/thead&gt;
-    &lt;tbody&gt;
-        &lt;tr&gt;
-            &lt;td&gt;unique keys&lt;/td&gt;
-            &lt;td&gt;select '{"0":0, "1":1,"0":2}'::json;&lt;/td&gt;
-            &lt;td&gt;{"0":0, "1":1, "0":2}&lt;/td&gt;
-            &lt;td&gt;'{"1":1, "0":2}'&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-            &lt;td&gt;no identation&lt;/td&gt;
-            &lt;td&gt;select '{"0":0, "1":1, "0":2}'::json;&lt;/td&gt;
-            &lt;td&gt;{"0":0, "1":1, "0":2}&lt;/td&gt;
-            &lt;td&gt;'{"1":1, "0":2}'&lt;/td&gt;
-        &lt;/tr&gt;
-    &lt;/tbody&gt;
-&lt;/table&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog of Ankarion</title><link href="https://ankarion.github.io/blog/" rel="alternate"></link><link href="https://ankarion.github.io/blog/feeds/all.atom.xml" rel="self"></link><id>https://ankarion.github.io/blog/</id><updated>2017-12-14T12:20:00+01:00</updated><entry><title>Jsonb</title><link href="https://ankarion.github.io/blog/jsonb.html" rel="alternate"></link><published>2017-12-14T12:20:00+01:00</published><updated>2017-12-14T12:20:00+01:00</updated><author><name>Bykov Anthony</name></author><id>tag:ankarion.github.io,2017-12-14:/blog/jsonb.html</id><summary type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
 
-&lt;h2&gt;Usage&lt;/h2&gt;
-&lt;p&gt;I will suggest to use jsonb in case when your tables are sparse.&lt;/p&gt;
-&lt;h2&gt;Benchmarks:&lt;/h2&gt;
-&lt;h3&gt;without jsonb at all&lt;/h3&gt;
+&lt;h1&gt;Definition&lt;/h1&gt;
+&lt;p&gt;It looks like a usual json except for some internal representation differences:&lt;/p&gt;
+&lt;script type="text/javascript"&gt;
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Comment');
+        data.addColumn('string', 'Example');
+        data.addColumn('string', 'Json');
+        data.addColumn('string', 'Jsonb');
+
+        // TODO: find out …&lt;/script&gt;</summary><content type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
+
+&lt;h1&gt;Definition&lt;/h1&gt;
+&lt;p&gt;It looks like a usual json except for some internal representation differences:&lt;/p&gt;
+&lt;script type="text/javascript"&gt;
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Comment');
+        data.addColumn('string', 'Example');
+        data.addColumn('string', 'Json');
+        data.addColumn('string', 'Jsonb');
+
+        // TODO: find out how to show spaces!!!
+        data.addRows([
+          ['unique keys', 'select \'{"0":0, "1":1,"0":2}\'::json;','{"0":0, "1":1, "0":2}', '{"1":1, "0":2}'],
+          ['no identation',  'select \'{"0":0, "1":1,        "0":2}\'::json;',  '{"0":0, "1":1,        "0":2}', '{"1":1, "0":2}']
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('definition_table'));
+
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+      }
+&lt;/script&gt;
+
+&lt;div id="definition_table"&gt;&lt;/div&gt;
+
+&lt;h1&gt;Usage&lt;/h1&gt;
+&lt;p&gt;Long story short, I will suggest to use jsonb in case when your tables are too sparse. Following chapter will explain this.&lt;/p&gt;
+&lt;h2&gt;project&lt;/h2&gt;
+&lt;p&gt;I would like to start explanations with descriptions of the project I used to work with.&lt;/p&gt;
+&lt;p&gt;Let's imagine that we have a beatiful project with data in &lt;a href="https://en.wikipedia.org/wiki/Third_normal_form"&gt;3NF&lt;/a&gt;, everything workes fine and fast. Let's look at our beatiful table of users:&lt;/p&gt;
+&lt;script type="text/javascript"&gt;
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Name');
+        data.addColumn('number', 'Salary');
+        data.addColumn('boolean', 'Full Time Employee');
+        data.addRows([
+          ['Mike',  {v: 10000, f: '$10,000'}, true],
+          ['Jim',   {v:8000,   f: '$8,000'},  false],
+          ['Alice', {v: 12500, f: '$12,500'}, true],
+          ['Bob',   {v: 7000,  f: '$7,000'},  true],
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('usage_table'));
+
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+      }
+&lt;/script&gt;
+
+&lt;div id="usage_table"&gt;&lt;/div&gt;
+
+&lt;p&gt;And suddenly our customer wants data science. Not the offline one - he wants it hot and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands.&lt;/p&gt;
+&lt;h1&gt;Benchmarks:&lt;/h1&gt;
+&lt;h2&gt;without jsonb at all&lt;/h2&gt;
 &lt;p&gt;The key concept of this point is to check how much space and time can jsonb save if the data in database is hardly structured.&lt;/p&gt;
-&lt;h3&gt;json vs jsonb&lt;/h3&gt;
+&lt;h2&gt;json vs jsonb&lt;/h2&gt;
 &lt;p&gt;Let's assume that we all agree that json and jsonb are both useful. But what is better(faster)? This question will be answered in the following benchmark. &lt;a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py"&gt;Here&lt;/a&gt; you can find a python script I used to generate tests. Actually, all of the benchmark tests look like &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;select&lt;/span&gt; &lt;span class="n"&gt;testold&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;{}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;)::&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -80,8 +89,6 @@
 
 &lt;p&gt;Where &lt;em&gt;"testnew"&lt;/em&gt; is used to test jsonb and &lt;em&gt;"testold"&lt;/em&gt; is used to test json so that we can clearly define what were the results of jsonb and json.
 ![benchmark results][transform]&lt;/p&gt;
-&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
-
 &lt;script type="text/javascript"&gt;
      var data;
      var chart;
@@ -98,8 +105,8 @@
       function drawChart() {
         data = new google.visualization.DataTable();
         data.addColumn('number', 'json size');
-        data.addColumn('number', 'latency_old');
-        data.addColumn('number', 'latency_new');
+        data.addColumn('number', 'latency_old, s');
+        data.addColumn('number', 'latency_new, s');
         data.addRows([
           [1,       7.208,      2.77],
           [1001,    53.411,     9.285],
@@ -137,7 +144,7 @@
         var options = {
             title:'Differences in latency',
             curveType: 'function',
-            legend: { position: 'bottom' }
+            legend: { position: 'right' }
             };
 
         // Instantiate and draw our chart, passing in some options.
@@ -154,6 +161,6 @@
 
 &lt;/script&gt;
 
-&lt;div id="chart_div" style="width:400; height:300"&gt;&lt;/div&gt;
+&lt;div id="chart_div" style="width:400; height:700"&gt;&lt;/div&gt;
 
-&lt;h2&gt;Future work:&lt;/h2&gt;</content></entry></feed>
+&lt;h1&gt;Future work:&lt;/h1&gt;</content></entry></feed>
