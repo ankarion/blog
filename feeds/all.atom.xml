@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog of Ankarion</title><link href="https://ankarion.github.io/blog/" rel="alternate"></link><link href="https://ankarion.github.io/blog/feeds/all.atom.xml" rel="self"></link><id>https://ankarion.github.io/blog/</id><updated>2017-12-14T12:20:00+01:00</updated><entry><title>Jsonb</title><link href="https://ankarion.github.io/blog/jsonb.html" rel="alternate"></link><published>2017-12-14T12:20:00+01:00</published><updated>2017-12-14T12:20:00+01:00</updated><author><name>Bykov Anthony</name></author><id>tag:ankarion.github.io,2017-12-14:/blog/jsonb.html</id><summary type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog of Ankarion</title><link href="https://ankarion.github.io/blog/" rel="alternate"></link><link href="https://ankarion.github.io/blog/feeds/all.atom.xml" rel="self"></link><id>https://ankarion.github.io/blog/</id><updated>2017-12-15T12:20:00+01:00</updated><entry><title>pgBench and YCSB</title><link href="https://ankarion.github.io/blog/pgbench-and-ycsb.html" rel="alternate"></link><published>2017-12-15T12:20:00+01:00</published><updated>2017-12-15T12:20:00+01:00</updated><author><name>Bykov Anthony</name></author><id>tag:ankarion.github.io,2017-12-15:/blog/pgbench-and-ycsb.html</id><summary type="html">&lt;h1&gt;YCSB&lt;/h1&gt;
+&lt;h2&gt;Definition&lt;/h2&gt;
+&lt;p&gt;Yahoo! Cloud Serving Benchmark&lt;/p&gt;
+&lt;p&gt;Comming soon&lt;/p&gt;</summary><content type="html">&lt;h1&gt;YCSB&lt;/h1&gt;
+&lt;h2&gt;Definition&lt;/h2&gt;
+&lt;p&gt;Yahoo! Cloud Serving Benchmark&lt;/p&gt;
+&lt;p&gt;Comming soon&lt;/p&gt;</content></entry><entry><title>Jsonb</title><link href="https://ankarion.github.io/blog/jsonb.html" rel="alternate"></link><published>2017-12-14T12:20:00+01:00</published><updated>2017-12-14T12:20:00+01:00</updated><author><name>Bykov Anthony</name></author><id>tag:ankarion.github.io,2017-12-14:/blog/jsonb.html</id><summary type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
 
 &lt;h1&gt;Definition&lt;/h1&gt;
 &lt;p&gt;It looks like a usual json except for some internal representation differences:&lt;/p&gt;
@@ -72,7 +78,7 @@
 
 &lt;div id="usage_table"&gt;&lt;/div&gt;
 
-&lt;p&gt;And suddenly our customer wants data science. Not the offline one - he wants it hot and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands.&lt;/p&gt;
+&lt;p&gt;And suddenly our customer wants data science. Not the offline one - he wants it hot and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands (&lt;a href="https://pandas.pydata.org/"&gt;pd&lt;/a&gt;[pandas]). After we've installed it (via &lt;a href=""&gt;pd_tutor&lt;/a&gt;[installation guide])&lt;/p&gt;
 &lt;h1&gt;Benchmarks:&lt;/h1&gt;
 &lt;h2&gt;without jsonb at all&lt;/h2&gt;
 &lt;p&gt;The key concept of this point is to check how much space and time can jsonb save if the data in database is hardly structured.&lt;/p&gt;
