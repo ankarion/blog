@@ -6,8 +6,10 @@ Category: PostgreSQL
 
 [//]: <> (# Jsonb outline:- definition- usage- benchmarks- future work)
 		
+In this article I was going to explain why and when jsonb is better than 3NF, clarify the differences between json and jsonb.
+		
 # Definition
-At first glance, it looks like a usual json except for some internal representation differences:
+At first glance, jsonb looks like a usual json except for some differences in guts:
 
 <script type="text/javascript">
       google.charts.load('current', {'packages':['table']});
@@ -34,11 +36,13 @@ At first glance, it looks like a usual json except for some internal representat
 <div id="definition_table"></div>
 
 
+But don't be fooled by this table. Jsonb is much more complex then json.
+
 # Usage
 Long story short, I will suggest using jsonb in a case when your tables are too sparse. The following chapter will explain this.
 
 ## Project
-I would like to start explanations with descriptions of the project I used to work with.
+I would like to start explanations with description of the project I used to work with.
 
 Let's imagine that we have a beautiful project with data in [3NF][3NF], everything works fine and fast. Let's look at our beautiful table of users:
 
@@ -72,7 +76,8 @@ And suddenly our customer wants to add more features:
 - kids salary (should be null if a user doesn't have one)
 - apartment size, squared matters (should also be null if a user doesn't have one)
 - if a user is an admin - add fields like "when it became an admin" 
-- if a user is an elf - add the id of his tree, etc
+- if a user is an elf - add the id of his tree
+- etc
 
 So, we will have a really sparse table and here starts data science (something like information retrieval). Not the offline one - customer wants hot data and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands ([pandas][pd]). After we've installed it (via [installation guide][pd_tutor]) we can see that CPU usage raised dramatically. That happens because we need to rebuild the whole table each time into feature list. One of the possible solutions is to store it in database:
 
