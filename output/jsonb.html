@@ -67,7 +67,7 @@
 
 <h1>Usage</h1>
 <p>Long story short, I will suggest to use jsonb in case when your tables are too sparse. Following chapter will explain this.</p>
-<h2>project</h2>
+<h2>Project</h2>
 <p>I would like to start explanations with descriptions of the project I used to work with.</p>
 <p>Let's imagine that we have a beatiful project with data in <a href="https://en.wikipedia.org/wiki/Third_normal_form">3NF</a>, everything workes fine and fast. Let's look at our beatiful table of users:</p>
 <script type="text/javascript">
@@ -94,7 +94,45 @@
 
 <div id="usage_table"></div>
 
-<p>And suddenly our customer wants data science. Not the offline one - he wants it hot and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands.</p>
+<p>And suddenly our customer wants to add more features:</p>
+<ul>
+<li>wife salary (should be null if a user doesn't have one)</li>
+<li>kids salary (should be null if a user doesn't have one)</li>
+<li>apartment size, squared metters (should also be null if a user doesn't have one)</li>
+<li>if a user is admin - add fields like "when it became admin" </li>
+<li>if a user is elf - add id of it's tree, etc</li>
+</ul>
+<p>So, we will have really sparse table and here starts data science (something like information retrieval). Not the offline one - customer wants hot data and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands (<a href="https://pandas.pydata.org/">pandas</a>). After we've installed it (via <a href="">installation guide</a>) we can see that CPU usage rised drammatically. That happens because we need to rebuild whole table each time into feature list. One of the possible solution is to store it in database:</p>
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Name');
+        data.addColumn('number', 'Salary');
+        data.addColumn('boolean', 'Full Time Employee');
+        data.addColumn('boolean', 'Salary < $5,000');
+        data.addColumn('boolean', 'Salary < $10,000');
+        data.addColumn('boolean', 'Salary < $15,000');
+        data.addColumn('string', 'etc');
+        data.addRows([
+          ['Mike',  {v: 10000, f: '$10,000'}, true, false, false, true, '...'],
+          ['Jim',   {v:8000,   f: '$8,000'},  false, false, true, true, '...'],
+          ['Alice', {v: 12500, f: '$12,500'}, true, false, false, true, '...'],
+          ['Bob',   {v: 7000,  f: '$7,000'},  true, false, true, true, '...'],
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('usage_table_2'));
+
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+      }
+</script>
+
+<div id="usage_table_2"></div>
+
+<p>I assume that there are other possible solutions, but for this article we will pick this one. </p>
+<p>This approach has some significant draw backs. One of them is huge amount of fields(columns) in tables.</p>
 <h1>Benchmarks:</h1>
 <h2>without jsonb at all</h2>
 <p>The key concept of this point is to check how much space and time can jsonb save if the data in database is hardly structured.</p>
@@ -109,8 +147,7 @@
 </pre></div>
 
 
-<p>Where <em>"testnew"</em> is used to test jsonb and <em>"testold"</em> is used to test json so that we can clearly define what were the results of jsonb and json.
-![benchmark results][transform]</p>
+<p>Where <em>"testnew"</em> is used to test jsonb and <em>"testold"</em> is used to test json so that we can clearly define what were the results of jsonb and json.</p>
 <script type="text/javascript">
      var data;
      var chart;

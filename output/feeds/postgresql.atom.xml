@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog of Ankarion - PostgreSQL</title><link href="https://ankarion.github.io/blog/" rel="alternate"></link><link href="https://ankarion.github.io/blog/feeds/postgresql.atom.xml" rel="self"></link><id>https://ankarion.github.io/blog/</id><updated>2017-12-14T12:20:00+01:00</updated><entry><title>Jsonb</title><link href="https://ankarion.github.io/blog/jsonb.html" rel="alternate"></link><published>2017-12-14T12:20:00+01:00</published><updated>2017-12-14T12:20:00+01:00</updated><author><name>Bykov Anthony</name></author><id>tag:ankarion.github.io,2017-12-14:/blog/jsonb.html</id><summary type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog of Ankarion - PostgreSQL</title><link href="https://ankarion.github.io/blog/" rel="alternate"></link><link href="https://ankarion.github.io/blog/feeds/postgresql.atom.xml" rel="self"></link><id>https://ankarion.github.io/blog/</id><updated>2017-12-15T12:20:00+01:00</updated><entry><title>pgBench and YCSB</title><link href="https://ankarion.github.io/blog/pgbench-and-ycsb.html" rel="alternate"></link><published>2017-12-15T12:20:00+01:00</published><updated>2017-12-15T12:20:00+01:00</updated><author><name>Bykov Anthony</name></author><id>tag:ankarion.github.io,2017-12-15:/blog/pgbench-and-ycsb.html</id><summary type="html">&lt;h1&gt;YCSB&lt;/h1&gt;
+&lt;h2&gt;Definition&lt;/h2&gt;
+&lt;p&gt;Yahoo! Cloud Serving Benchmark&lt;/p&gt;
+&lt;p&gt;Comming soon&lt;/p&gt;</summary><content type="html">&lt;h1&gt;YCSB&lt;/h1&gt;
+&lt;h2&gt;Definition&lt;/h2&gt;
+&lt;p&gt;Yahoo! Cloud Serving Benchmark&lt;/p&gt;
+&lt;p&gt;Comming soon&lt;/p&gt;</content></entry><entry><title>Jsonb</title><link href="https://ankarion.github.io/blog/jsonb.html" rel="alternate"></link><published>2017-12-14T12:20:00+01:00</published><updated>2017-12-14T12:20:00+01:00</updated><author><name>Bykov Anthony</name></author><id>tag:ankarion.github.io,2017-12-14:/blog/jsonb.html</id><summary type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
 
 &lt;h1&gt;Definition&lt;/h1&gt;
 &lt;p&gt;It looks like a usual json except for some internal representation differences:&lt;/p&gt;
@@ -45,7 +51,7 @@
 
 &lt;h1&gt;Usage&lt;/h1&gt;
 &lt;p&gt;Long story short, I will suggest to use jsonb in case when your tables are too sparse. Following chapter will explain this.&lt;/p&gt;
-&lt;h2&gt;project&lt;/h2&gt;
+&lt;h2&gt;Project&lt;/h2&gt;
 &lt;p&gt;I would like to start explanations with descriptions of the project I used to work with.&lt;/p&gt;
 &lt;p&gt;Let's imagine that we have a beatiful project with data in &lt;a href="https://en.wikipedia.org/wiki/Third_normal_form"&gt;3NF&lt;/a&gt;, everything workes fine and fast. Let's look at our beatiful table of users:&lt;/p&gt;
 &lt;script type="text/javascript"&gt;
@@ -72,7 +78,45 @@
 
 &lt;div id="usage_table"&gt;&lt;/div&gt;
 
-&lt;p&gt;And suddenly our customer wants data science. Not the offline one - he wants it hot and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands.&lt;/p&gt;
+&lt;p&gt;And suddenly our customer wants to add more features:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;wife salary (should be null if a user doesn't have one)&lt;/li&gt;
+&lt;li&gt;kids salary (should be null if a user doesn't have one)&lt;/li&gt;
+&lt;li&gt;apartment size, squared metters (should also be null if a user doesn't have one)&lt;/li&gt;
+&lt;li&gt;if a user is admin - add fields like "when it became admin" &lt;/li&gt;
+&lt;li&gt;if a user is elf - add id of it's tree, etc&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So, we will have really sparse table and here starts data science (something like information retrieval). Not the offline one - customer wants hot data and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands (&lt;a href="https://pandas.pydata.org/"&gt;pandas&lt;/a&gt;). After we've installed it (via &lt;a href=""&gt;installation guide&lt;/a&gt;) we can see that CPU usage rised drammatically. That happens because we need to rebuild whole table each time into feature list. One of the possible solution is to store it in database:&lt;/p&gt;
+&lt;script type="text/javascript"&gt;
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Name');
+        data.addColumn('number', 'Salary');
+        data.addColumn('boolean', 'Full Time Employee');
+        data.addColumn('boolean', 'Salary &lt; $5,000');
+        data.addColumn('boolean', 'Salary &lt; $10,000');
+        data.addColumn('boolean', 'Salary &lt; $15,000');
+        data.addColumn('string', 'etc');
+        data.addRows([
+          ['Mike',  {v: 10000, f: '$10,000'}, true, false, false, true, '...'],
+          ['Jim',   {v:8000,   f: '$8,000'},  false, false, true, true, '...'],
+          ['Alice', {v: 12500, f: '$12,500'}, true, false, false, true, '...'],
+          ['Bob',   {v: 7000,  f: '$7,000'},  true, false, true, true, '...'],
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('usage_table_2'));
+
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+      }
+&lt;/script&gt;
+
+&lt;div id="usage_table_2"&gt;&lt;/div&gt;
+
+&lt;p&gt;I assume that there are other possible solutions, but for this article we will pick this one. &lt;/p&gt;
+&lt;p&gt;This approach has some significant draw backs. One of them is huge amount of fields(columns) in tables.&lt;/p&gt;
 &lt;h1&gt;Benchmarks:&lt;/h1&gt;
 &lt;h2&gt;without jsonb at all&lt;/h2&gt;
 &lt;p&gt;The key concept of this point is to check how much space and time can jsonb save if the data in database is hardly structured.&lt;/p&gt;
@@ -87,8 +131,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Where &lt;em&gt;"testnew"&lt;/em&gt; is used to test jsonb and &lt;em&gt;"testold"&lt;/em&gt; is used to test json so that we can clearly define what were the results of jsonb and json.
-![benchmark results][transform]&lt;/p&gt;
+&lt;p&gt;Where &lt;em&gt;"testnew"&lt;/em&gt; is used to test jsonb and &lt;em&gt;"testold"&lt;/em&gt; is used to test json so that we can clearly define what were the results of jsonb and json.&lt;/p&gt;
 &lt;script type="text/javascript"&gt;
      var data;
      var chart;
