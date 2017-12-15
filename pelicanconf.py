@@ -7,6 +7,7 @@ SITENAME = u'Blog of Ankarion'
 SITEURL = ''
 
 PATH = 'content'
+THEME = "notmyidea"
 
 TIMEZONE = 'Europe/Paris'
 
@@ -30,10 +31,22 @@ LINKS = (('Pelican', 'http://getpelican.com/'),
          ('You can modify those links in your config file', '#'),)
 
 # Social widget
-SOCIAL = (('You can add links in your config file', '#'),
-          ('Another social link', '#'),)
+SOCIAL = (
+		('Github','https://github.com/ankarion'),
+		('Few words about myself','https://ankarion.github.io'),
+		('Telegram', 'https://t.me/Ankarion'),
+		  )
 
 DEFAULT_PAGINATION = 10
+
+# PLUGINS
+PLUGIN_PATHS = ['../pelican-plugins']
+PLUGINS = ['assets', 'sitemap', 'gravatar', 'neighbors']
+
+# PLUGINS VARIABLES
+SITEMAP = {
+		'format':'xml',
+		}
 
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True

@@ -7,7 +7,7 @@ Category: PostgreSQL
 [//]: <> (# Jsonb outline:- definition- usage- benchmarks- future work)
 		
 # Definition
-It looks like a usual json except for some internal representation differences:
+At first glance, it looks like a usual json except for some internal representation differences:
 
 <script type="text/javascript">
       google.charts.load('current', {'packages':['table']});
@@ -35,12 +35,12 @@ It looks like a usual json except for some internal representation differences:
 
 
 # Usage
-Long story short, I will suggest to use jsonb in case when your tables are too sparse. Following chapter will explain this.
+Long story short, I will suggest using jsonb in a case when your tables are too sparse. The following chapter will explain this.
 
 ## Project
 I would like to start explanations with descriptions of the project I used to work with.
 
-Let's imagine that we have a beatiful project with data in [3NF][3NF], everything workes fine and fast. Let's look at our beatiful table of users:
+Let's imagine that we have a beautiful project with data in [3NF][3NF], everything works fine and fast. Let's look at our beautiful table of users:
 
 <script type="text/javascript">
       google.charts.load('current', {'packages':['table']});
@@ -68,13 +68,13 @@ Let's imagine that we have a beatiful project with data in [3NF][3NF], everythin
 
 And suddenly our customer wants to add more features:
 
-- wife salary (should be null if a user doesn't have one)
+- wife's salary (should be null if a user doesn't have one)
 - kids salary (should be null if a user doesn't have one)
-- apartment size, squared metters (should also be null if a user doesn't have one)
-- if a user is admin - add fields like "when it became admin" 
-- if a user is elf - add id of it's tree, etc
+- apartment size, squared matters (should also be null if a user doesn't have one)
+- if a user is an admin - add fields like "when it became an admin" 
+- if a user is an elf - add the id of his tree, etc
 
-So, we will have really sparse table and here starts data science (something like information retrieval). Not the offline one - customer wants hot data and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands ([pandas][pd]). After we've installed it (via [installation guide][pd_tutor]) we can see that CPU usage rised drammatically. That happens because we need to rebuild whole table each time into feature list. One of the possible solution is to store it in database:
+So, we will have a really sparse table and here starts data science (something like information retrieval). Not the offline one - customer wants hot data and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands ([pandas][pd]). After we've installed it (via [installation guide][pd_tutor]) we can see that CPU usage raised dramatically. That happens because we need to rebuild the whole table each time into feature list. One of the possible solutions is to store it in database:
 
 <script type="text/javascript">
       google.charts.load('current', {'packages':['table']});
@@ -85,15 +85,15 @@ So, we will have really sparse table and here starts data science (something lik
         data.addColumn('string', 'Name');
         data.addColumn('number', 'Salary');
         data.addColumn('boolean', 'Full Time Employee');
-        data.addColumn('boolean', 'Salary < $5,000');
-        data.addColumn('boolean', 'Salary < $10,000');
-        data.addColumn('boolean', 'Salary < $15,000');
+        data.addColumn('number', 'wife\'s salary');
+        data.addColumn('number', 'kids salary');
+        data.addColumn('number', 'apartment size');
         data.addColumn('string', 'etc');
         data.addRows([
-          ['Mike',  {v: 10000, f: '$10,000'}, true, false, false, true, '...'],
-          ['Jim',   {v:8000,   f: '$8,000'},  false, false, true, true, '...'],
-          ['Alice', {v: 12500, f: '$12,500'}, true, false, false, true, '...'],
-          ['Bob',   {v: 7000,  f: '$7,000'},  true, false, true, true, '...'],
+          ['Mike',  {v: 10000, f: '$10,000'}, true, {v: 1000, f: '$1,000'}, {v: 15000, f: '$10,000'}, 42, '...'],
+          ['Jim',   {v:8000,   f: '$8,000'},  false, {v: 8000, f: '$8,000'}, null, 100, '...'],
+          ['Alice', {v: 12500, f: '$12,500'}, true, null, {v: 10000, f: '$10,000'}, 78, '...'],
+          ['Bob',   {v: 7000,  f: '$7,000'},  true, null, null, null, '...'],
         ]);
 
         var table = new google.visualization.Table(document.getElementById('usage_table_2'));
@@ -102,15 +102,76 @@ So, we will have really sparse table and here starts data science (something lik
       }
 </script>
 
-<div id="usage_table_2"></div>
+<div id="usage_table_2"></div> 
 
-I assume that there are other possible solutions, but for this article we will pick this one. 
+This approach has some significant drawbacks. One of them is a huge amount of fields(columns) and redundant information in tables: just imagine what happens if Make, for example, and Alice have 3 children each? All the fields our customer wanted to add will be repeated for each child:
 
-This approach has some significant draw backs. One of them is huge amount of fields(columns) in tables.
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Name');
+        data.addColumn('number', 'Salary');
+        data.addColumn('boolean', 'Full Time Employee');
+        data.addColumn('number', 'wife\'s salary');
+        data.addColumn('number', 'kids salary');
+        data.addColumn('number', 'apartment size');
+        data.addColumn('string', 'etc');
+        data.addRows([
+          ['Mike',  {v: 10000, f: '$10,000'}, true, {v: 1000, f: '$1,000'}, {v: 15000, f: '$15,000'}, 42, '...'],
+          ['Mike',  {v: 10000, f: '$10,000'}, true, {v: 1000, f: '$1,000'}, {v: 5000, f: '$5,000'}, 42, '...'],
+          ['Mike',  {v: 10000, f: '$10,000'}, true, {v: 1000, f: '$1,000'}, {v: 23000, f: '$23,000'}, 42, '...'],
+          ['Jim',   {v:8000,   f: '$8,000'},  false, {v: 8000, f: '$8,000'}, null, 100, '...'],
+          ['Alice', {v: 12500, f: '$12,500'}, true, null, {v: 1000, f: '$1,000'}, 78, '...'],
+          ['Alice', {v: 12500, f: '$12,500'}, true, null, {v: 4000, f: '$4,000'}, 78, '...'],
+          ['Alice', {v: 12500, f: '$12,500'}, true, null, {v: 100000, f: '$100,000'}, 78, '...'],
+          ['Bob',   {v: 7000,  f: '$7,000'},  true, null, null, null, '...'],
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('usage_table_3'));
+
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+      }
+</script>
+
+<div id="usage_table_3"></div>
+
+As a result, our pretty 4 by 4 table became a 100500 by 100500 monster! 
+
+This is where json comes. We can put all those fields (especially about kids) into json:
+
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Name');
+        data.addColumn('number', 'Salary');
+        data.addColumn('boolean', 'Full Time Employee');
+        data.addColumn('string', 'extra fields');
+        data.addRows([
+          ['Mike',  {v: 10000, f: '$10,000'}, true, "{'wife\'s salary':$15,000, 'kids salary':[$1,000, $5,000, $23,000], 'apartment size':42, 'etc':'...'}"],
+          ['Jim',   {v:8000,   f: '$8,000'},  false, "{'wife\'s salary':$8,000, 'apartment size':100, 'etc':'...'}"],
+          ['Alice', {v: 12500, f: '$12,500'}, true, "{'wife\'s salary':$15,000, 'kids salary':[$1,000, $4,000, $100,000], 'apartment size':78, 'etc':'...'}"],
+          ['Bob',   {v: 7000,  f: '$7,000'},  true, "{'etc':'...'}"],
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('usage_table_4'));
+
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+      }
+</script>
+
+<div id="usage_table_4"></div>
+
+So, we have 5 by 4 table now.
 
 # Benchmarks:
 ## without jsonb at all
-The key concept of this point is to check how much space and time can jsonb save if the data in database is hardly structured.
+The key concept of this point is to check how much space and time can jsonb save if the data in the database is hardly structured.
 
 ## json vs jsonb
 Let's assume that we all agree that json and jsonb are both useful. But what is better(faster)? This question will be answered in the following benchmark. [Here][pyGen] you can find a python script I used to generate tests. Actually, all of the benchmark tests look like 
