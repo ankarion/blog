@@ -7,21 +7,18 @@
 &lt;p&gt;Yahoo! Cloud Serving Benchmark&lt;/p&gt;
 &lt;p&gt;Comming soon&lt;/p&gt;</content></entry><entry><title>Jsonb</title><link href="https://ankarion.github.io/blog/jsonb.html" rel="alternate"></link><published>2017-12-14T12:20:00+01:00</published><updated>2017-12-14T12:20:00+01:00</updated><author><name>Bykov Anthony</name></author><id>tag:ankarion.github.io,2017-12-14:/blog/jsonb.html</id><summary type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
 
+&lt;p&gt;In this article I was going to explain why and when jsonb is better than 3NF, clarify the differences between json and jsonb.&lt;/p&gt;
 &lt;h1&gt;Definition&lt;/h1&gt;
-&lt;p&gt;At first glance, it looks like a usual json except for some internal representation differences:&lt;/p&gt;
+&lt;p&gt;At first glance, jsonb looks like a usual json except for some differences in guts:&lt;/p&gt;
 &lt;script type="text/javascript"&gt;
       google.charts.load('current', {'packages':['table']});
       google.charts.setOnLoadCallback(drawTable);
 
-      function drawTable() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Comment');
-        data.addColumn('string', 'Example');
-        data.addColumn('string', 'Json');
-        data.addColumn('string', 'Jsonb' …&lt;/script&gt;</summary><content type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
+      function …&lt;/script&gt;</summary><content type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
 
+&lt;p&gt;In this article I was going to explain why and when jsonb is better than 3NF, clarify the differences between json and jsonb.&lt;/p&gt;
 &lt;h1&gt;Definition&lt;/h1&gt;
-&lt;p&gt;At first glance, it looks like a usual json except for some internal representation differences:&lt;/p&gt;
+&lt;p&gt;At first glance, jsonb looks like a usual json except for some differences in guts:&lt;/p&gt;
 &lt;script type="text/javascript"&gt;
       google.charts.load('current', {'packages':['table']});
       google.charts.setOnLoadCallback(drawTable);
@@ -47,10 +44,11 @@
 
 &lt;div id="definition_table"&gt;&lt;/div&gt;
 
+&lt;p&gt;But don't be fooled by this table. Jsonb is much more complex then json.&lt;/p&gt;
 &lt;h1&gt;Usage&lt;/h1&gt;
 &lt;p&gt;Long story short, I will suggest using jsonb in a case when your tables are too sparse. The following chapter will explain this.&lt;/p&gt;
 &lt;h2&gt;Project&lt;/h2&gt;
-&lt;p&gt;I would like to start explanations with descriptions of the project I used to work with.&lt;/p&gt;
+&lt;p&gt;I would like to start explanations with description of the project I used to work with.&lt;/p&gt;
 &lt;p&gt;Let's imagine that we have a beautiful project with data in &lt;a href="https://en.wikipedia.org/wiki/Third_normal_form"&gt;3NF&lt;/a&gt;, everything works fine and fast. Let's look at our beautiful table of users:&lt;/p&gt;
 &lt;script type="text/javascript"&gt;
       google.charts.load('current', {'packages':['table']});
@@ -82,7 +80,8 @@
 &lt;li&gt;kids salary (should be null if a user doesn't have one)&lt;/li&gt;
 &lt;li&gt;apartment size, squared matters (should also be null if a user doesn't have one)&lt;/li&gt;
 &lt;li&gt;if a user is an admin - add fields like "when it became an admin" &lt;/li&gt;
-&lt;li&gt;if a user is an elf - add the id of his tree, etc&lt;/li&gt;
+&lt;li&gt;if a user is an elf - add the id of his tree&lt;/li&gt;
+&lt;li&gt;etc&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;So, we will have a really sparse table and here starts data science (something like information retrieval). Not the offline one - customer wants hot data and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands (&lt;a href="https://pandas.pydata.org/"&gt;pandas&lt;/a&gt;). After we've installed it (via &lt;a href=""&gt;installation guide&lt;/a&gt;) we can see that CPU usage raised dramatically. That happens because we need to rebuild the whole table each time into feature list. One of the possible solutions is to store it in database:&lt;/p&gt;
 &lt;script type="text/javascript"&gt;

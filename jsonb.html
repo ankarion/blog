@@ -39,8 +39,9 @@
 
 </footer><!-- /.post-info -->      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
+<p>In this article I was going to explain why and when jsonb is better than 3NF, clarify the differences between json and jsonb.</p>
 <h1>Definition</h1>
-<p>At first glance, it looks like a usual json except for some internal representation differences:</p>
+<p>At first glance, jsonb looks like a usual json except for some differences in guts:</p>
 <script type="text/javascript">
       google.charts.load('current', {'packages':['table']});
       google.charts.setOnLoadCallback(drawTable);
@@ -66,10 +67,11 @@
 
 <div id="definition_table"></div>
 
+<p>But don't be fooled by this table. Jsonb is much more complex then json.</p>
 <h1>Usage</h1>
 <p>Long story short, I will suggest using jsonb in a case when your tables are too sparse. The following chapter will explain this.</p>
 <h2>Project</h2>
-<p>I would like to start explanations with descriptions of the project I used to work with.</p>
+<p>I would like to start explanations with description of the project I used to work with.</p>
 <p>Let's imagine that we have a beautiful project with data in <a href="https://en.wikipedia.org/wiki/Third_normal_form">3NF</a>, everything works fine and fast. Let's look at our beautiful table of users:</p>
 <script type="text/javascript">
       google.charts.load('current', {'packages':['table']});
@@ -101,7 +103,8 @@
 <li>kids salary (should be null if a user doesn't have one)</li>
 <li>apartment size, squared matters (should also be null if a user doesn't have one)</li>
 <li>if a user is an admin - add fields like "when it became an admin" </li>
-<li>if a user is an elf - add the id of his tree, etc</li>
+<li>if a user is an elf - add the id of his tree</li>
+<li>etc</li>
 </ul>
 <p>So, we will have a really sparse table and here starts data science (something like information retrieval). Not the offline one - customer wants hot data and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands (<a href="https://pandas.pydata.org/">pandas</a>). After we've installed it (via <a href="">installation guide</a>) we can see that CPU usage raised dramatically. That happens because we need to rebuild the whole table each time into feature list. One of the possible solutions is to store it in database:</p>
 <script type="text/javascript">
