@@ -4,56 +4,56 @@ xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitem
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-<loc>https://ankarion.github.io/blog/</loc>
-<lastmod>2017-12-19T09:26:06-00:00</lastmod>
+<loc>/</loc>
+<lastmod>2017-12-19T16:38:51-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://ankarion.github.io/blog/archives.html</loc>
-<lastmod>2017-12-19T09:26:06-00:00</lastmod>
+<loc>/archives.html</loc>
+<lastmod>2017-12-19T16:38:51-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://ankarion.github.io/blog/tags.html</loc>
-<lastmod>2017-12-19T09:26:06-00:00</lastmod>
+<loc>/tags.html</loc>
+<lastmod>2017-12-19T16:38:51-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://ankarion.github.io/blog/categories.html</loc>
-<lastmod>2017-12-19T09:26:06-00:00</lastmod>
+<loc>/categories.html</loc>
+<lastmod>2017-12-19T16:38:51-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://ankarion.github.io/blog/pgbench-and-ycsb.html</loc>
+<loc>/pgbench-and-ycsb.html</loc>
 <lastmod>2017-12-15T12:20:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://ankarion.github.io/blog/jsonb.html</loc>
+<loc>/jsonb.html</loc>
 <lastmod>2017-12-14T12:20:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://ankarion.github.io/blog/category/postgresql.html</loc>
+<loc>/category/postgresql.html</loc>
 <lastmod>2017-12-15T12:20:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>https://ankarion.github.io/blog/author/bykov-anthony.html</loc>
+<loc>/author/bykov-anthony.html</loc>
 <lastmod>2017-12-15T12:20:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>

@@ -5,8 +5,12 @@ Category: PostgreSQL
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 [//]: <> (# Jsonb outline:- definition- usage- benchmarks- future work)
-		
-In this article I was going to explain why and when jsonb is better than 3NF, clarify the differences between json and jsonb.
+
+Outline:
+	
+- **definition** section contains link to official documentation and some thoughts about it.
+- **usage** section - for those who was interested in usage of jsonb. It contains description of the project I used to work with and some comments on how it should be implemented.
+- **benchmarks** - contains velocity comparison of jsonb and json.
 		
 # Definition
 At first glance, jsonb looks like a usual json except for some differences in guts:
@@ -36,15 +40,13 @@ At first glance, jsonb looks like a usual json except for some differences in gu
 <div id="definition_table"></div>
 
 
-But don't be fooled by this table. Jsonb is much more complex then json.
+But don't be fooled by this data. Jsonb is much more complex then json. [Here][jsonb] you can find full definition of jsonb.
 
 # Usage
-Long story short, I will suggest using jsonb in a case when your tables are too sparse. The following chapter will explain this.
+Long story short, I will suggest using jsonb in case when your tables are too sparse. The following chapter will explain this.
 
 ## Project
-I would like to start explanations with description of the project I used to work with.
-
-Let's imagine that we have a beautiful project with data in [3NF][3NF], everything works fine and fast. Let's look at our beautiful table of users:
+Let's imagine that we have a beautiful project with data in [3NF][3NF], everything works fine and fast. Let's look at our beautiful table of **users**:
 
 <script type="text/javascript">
       google.charts.load('current', {'packages':['table']});
@@ -54,61 +56,32 @@ Let's imagine that we have a beautiful project with data in [3NF][3NF], everythi
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Name');
         data.addColumn('number', 'Salary');
-        data.addColumn('boolean', 'Full Time Employee');
         data.addRows([
-          ['Mike',  {v: 10000, f: '$10,000'}, true],
-          ['Jim',   {v:8000,   f: '$8,000'},  false],
-          ['Alice', {v: 12500, f: '$12,500'}, true],
-          ['Bob',   {v: 7000,  f: '$7,000'},  true],
+          ['Mike',  {v: 10000, f: '$10,000'}],
+          ['Jim',   {v:8000,   f: '$8,000'}],
+          ['Alice', {v: 12500, f: '$12,500'}],
+          ['Bob',   {v: 7000,  f: '$7,000'}],
         ]);
 
         var table = new google.visualization.Table(document.getElementById('usage_table'));
 
-        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+        table.draw(data, {showRowNumber: true, width: '30%', height: '30%'});
       }
 </script>
-
+<center>
 <div id="usage_table"></div>
+</center>
 
 And suddenly our customer wants to add more features:
 
 - wife's salary (should be null if a user doesn't have one)
-- kids salary (should be null if a user doesn't have one)
-- apartment size, squared matters (should also be null if a user doesn't have one)
+- kid's salary (should be null if a user doesn't have one)
+- apartment size square meters (should also be null if a user doesn't have one)
 - if a user is an admin - add fields like "when it became an admin" 
 - if a user is an elf - add the id of his tree
 - etc
 
-So, we will have a really sparse table and here starts data science (something like information retrieval). Not the offline one - customer wants hot data and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands ([pandas][pd]). After we've installed it (via [installation guide][pd_tutor]) we can see that CPU usage raised dramatically. That happens because we need to rebuild the whole table each time into feature list. One of the possible solutions is to store it in database:
-
-<script type="text/javascript">
-      google.charts.load('current', {'packages':['table']});
-      google.charts.setOnLoadCallback(drawTable);
-
-      function drawTable() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Name');
-        data.addColumn('number', 'Salary');
-        data.addColumn('number', 'wife\'s salary');
-        data.addColumn('number', 'kids salary');
-        data.addColumn('number', 'apartment size');
-        data.addColumn('string', 'etc');
-        data.addRows([
-          ['Mike',  {v: 10000, f: '$10,000'},  {v: 1000, f: '$1,000'}, {v: 15000, f: '$10,000'}, 42, '...'],
-          ['Jim',   {v:8000,   f: '$8,000'},   {v: 8000, f: '$8,000'}, null, 100, '...'],
-          ['Alice', {v: 12500, f: '$12,500'},  null, {v: 10000, f: '$10,000'}, 78, '...'],
-          ['Bob',   {v: 7000,  f: '$7,000'},   null, null, null, '...'],
-        ]);
-
-        var table = new google.visualization.Table(document.getElementById('usage_table_2'));
-
-        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
-      }
-</script>
-
-<div id="usage_table_2"></div> 
-
-This approach has some significant drawbacks. One of them is a huge amount of fields(columns) and redundant information in tables: just imagine what happens if Make, for example, and Alice have 3 children each? All the fields our customer wanted to add will be repeated for each child:
+Adding all those field to the table has some significant drawbacks. One of them is a huge amount of fields(columns) and redundant information in tables: just imagine what happens if Mike, for example, and Alice have 3 children each? All the fields our customer wanted to add will be repeated for each child:
 
 <script type="text/javascript">
       google.charts.load('current', {'packages':['table']});
@@ -135,16 +108,17 @@ This approach has some significant drawbacks. One of them is a huge amount of fi
 
         var table = new google.visualization.Table(document.getElementById('usage_table_3'));
 
-        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+        table.draw(data, {showRowNumber: true, width: '90%', height: '90%'});
       }
 </script>
-
+<center>
 <div id="usage_table_3"></div>
+</center>
 
 As a result, our pretty 4 by 4 table became a 100500 by 100500 monster! We can fix it in 2 different ways: normalization or jsonb.
 
 ### Normalization
-When we added new fields, we broke normalization. So, we need to return data back to 3NF in order to reduce sizes of that monster.
+The first idea is to return data back to [3NF][3NF] in order to reduce sizes of that monster.
 
 <script type="text/javascript">
       google.charts.load('current', {'packages':['table']});
@@ -187,6 +161,7 @@ When we added new fields, we broke normalization. So, we need to return data bac
       }
 </script>
 
+<center><div id="entities"></div></center>
 <table>
 <tr>
 <td><b>users:</b><div id="normalization_table_1"></div></td>
@@ -194,9 +169,11 @@ When we added new fields, we broke normalization. So, we need to return data bac
 </tr>
 </table>
 
+As you can see in the example, Mike has a wife(Alice) and they have only one kid with salary $15,000, but they have 2 more kids from other marriage.
+
 <!-- TODO: add more tables -->
 
-So, we'll have about 100500 different tables with 2-3 tuples. The problem we can run into is complexity of joins.
+We'll have about 100500 different tables with 2-3 tuples. The problem we can run into is a complexity of joins. Let's look at other solution.
 
 ### Jsonb
 
@@ -330,4 +307,5 @@ Where *"testnew"* is used to test jsonb and *"testold"* is used to test json so 
 [//]: <> (articles)
 [3NF]: https://en.wikipedia.org/wiki/Third_normal_form
 [pd]: https://pandas.pydata.org/
+[jsonb]: https://www.postgresql.org/docs/9.6/static/functions-json.html
 [pd_tutor]: 
