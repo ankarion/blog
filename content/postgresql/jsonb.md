@@ -89,16 +89,15 @@ So, we will have a really sparse table and here starts data science (something l
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Name');
         data.addColumn('number', 'Salary');
-        data.addColumn('boolean', 'Full Time Employee');
         data.addColumn('number', 'wife\'s salary');
         data.addColumn('number', 'kids salary');
         data.addColumn('number', 'apartment size');
         data.addColumn('string', 'etc');
         data.addRows([
-          ['Mike',  {v: 10000, f: '$10,000'}, true, {v: 1000, f: '$1,000'}, {v: 15000, f: '$10,000'}, 42, '...'],
-          ['Jim',   {v:8000,   f: '$8,000'},  false, {v: 8000, f: '$8,000'}, null, 100, '...'],
-          ['Alice', {v: 12500, f: '$12,500'}, true, null, {v: 10000, f: '$10,000'}, 78, '...'],
-          ['Bob',   {v: 7000,  f: '$7,000'},  true, null, null, null, '...'],
+          ['Mike',  {v: 10000, f: '$10,000'},  {v: 1000, f: '$1,000'}, {v: 15000, f: '$10,000'}, 42, '...'],
+          ['Jim',   {v:8000,   f: '$8,000'},   {v: 8000, f: '$8,000'}, null, 100, '...'],
+          ['Alice', {v: 12500, f: '$12,500'},  null, {v: 10000, f: '$10,000'}, 78, '...'],
+          ['Bob',   {v: 7000,  f: '$7,000'},   null, null, null, '...'],
         ]);
 
         var table = new google.visualization.Table(document.getElementById('usage_table_2'));
@@ -119,20 +118,19 @@ This approach has some significant drawbacks. One of them is a huge amount of fi
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Name');
         data.addColumn('number', 'Salary');
-        data.addColumn('boolean', 'Full Time Employee');
         data.addColumn('number', 'wife\'s salary');
         data.addColumn('number', 'kids salary');
         data.addColumn('number', 'apartment size');
         data.addColumn('string', 'etc');
         data.addRows([
-          ['Mike',  {v: 10000, f: '$10,000'}, true, {v: 1000, f: '$1,000'}, {v: 15000, f: '$15,000'}, 42, '...'],
-          ['Mike',  {v: 10000, f: '$10,000'}, true, {v: 1000, f: '$1,000'}, {v: 5000, f: '$5,000'}, 42, '...'],
-          ['Mike',  {v: 10000, f: '$10,000'}, true, {v: 1000, f: '$1,000'}, {v: 23000, f: '$23,000'}, 42, '...'],
-          ['Jim',   {v:8000,   f: '$8,000'},  false, {v: 8000, f: '$8,000'}, null, 100, '...'],
-          ['Alice', {v: 12500, f: '$12,500'}, true, null, {v: 1000, f: '$1,000'}, 78, '...'],
-          ['Alice', {v: 12500, f: '$12,500'}, true, null, {v: 4000, f: '$4,000'}, 78, '...'],
-          ['Alice', {v: 12500, f: '$12,500'}, true, null, {v: 100000, f: '$100,000'}, 78, '...'],
-          ['Bob',   {v: 7000,  f: '$7,000'},  true, null, null, null, '...'],
+          ['Mike',  {v: 10000, f: '$10,000'},  {v: 1000, f: '$1,000'}, {v: 15000, f: '$15,000'}, 42, '...'],
+          ['Mike',  {v: 10000, f: '$10,000'},  {v: 1000, f: '$1,000'}, {v: 5000, f: '$5,000'}, 42, '...'],
+          ['Mike',  {v: 10000, f: '$10,000'},  {v: 1000, f: '$1,000'}, {v: 23000, f: '$23,000'}, 42, '...'],
+          ['Jim',   {v:8000,   f: '$8,000'},   {v: 8000, f: '$8,000'}, null, 100, '...'],
+          ['Alice', {v: 12500, f: '$12,500'},  null, {v: 15000, f: '$15,000'}, 78, '...'],
+          ['Alice', {v: 12500, f: '$12,500'},  null, {v: 4000, f: '$4,000'}, 78, '...'],
+          ['Alice', {v: 12500, f: '$12,500'},  null, {v: 100000, f: '$100,000'}, 78, '...'],
+          ['Bob',   {v: 7000,  f: '$7,000'},   null, null, null, '...'],
         ]);
 
         var table = new google.visualization.Table(document.getElementById('usage_table_3'));
@@ -143,7 +141,64 @@ This approach has some significant drawbacks. One of them is a huge amount of fi
 
 <div id="usage_table_3"></div>
 
-As a result, our pretty 4 by 4 table became a 100500 by 100500 monster! 
+As a result, our pretty 4 by 4 table became a 100500 by 100500 monster! We can fix it in 2 different ways: normalization or jsonb.
+
+### Normalization
+When we added new fields, we broke normalization. So, we need to return data back to 3NF in order to reduce sizes of that monster.
+
+<script type="text/javascript">
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data1 = new google.visualization.DataTable();
+        data1.addColumn('string', 'Name');
+        data1.addColumn('number', 'Salary');
+        data1.addColumn('number', 'Wife');
+        data1.addColumn('number', 'apartment size');
+        data1.addColumn('string', 'etc');
+        data1.addRows([
+          ['Mike',  {v: 10000, f: '$10,000'}, 3, 42, '...'],
+          ['Jim',   {v:8000,   f: '$8,000'},  null, 100, '...'],
+          ['Alice', {v: 12500, f: '$12,500'}, null, 78, '...'],
+          ['Bob',   {v: 7000,  f: '$7,000'},  null, null, '...'],
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('normalization_table_1'));
+
+        table.draw(data1, {showRowNumber: true, width: '100%', height: '100%'});
+        
+        var data2 = new google.visualization.DataTable();
+        data2.addColumn('number', 'Salary');
+        data2.addColumn('number', 'Parent 1');
+        data2.addColumn('number', 'Parent 2');
+        data2.addColumn('string', 'etc');
+        data2.addRows([
+          [{v: 15000, f: '$15,000'}, 1, 3, '...'],
+          [{v: 5000, f: '$5,000'}, 1, null, '...'],
+          [{v: 23000, f: '$23,000'}, 1, null, '...'],
+          [{v: 100000, f: '$100,000'}, 3, null, '...'],
+          [{v: 4000,  f: '$4,000'},  3, null, '...'],
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('normalization_table_2'));
+
+        table.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
+      }
+</script>
+
+<table>
+<tr>
+<td><b>users:</b><div id="normalization_table_1"></div></td>
+<td><b>kids:</b><div id="normalization_table_2"></div></td>
+</tr>
+</table>
+
+<!-- TODO: add more tables -->
+
+So, we'll have about 100500 different tables with 2-3 tuples. The problem we can run into is complexity of joins.
+
+### Jsonb
 
 This is where json comes. We can put all those fields (especially about kids) into json:
 
@@ -155,13 +210,12 @@ This is where json comes. We can put all those fields (especially about kids) in
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Name');
         data.addColumn('number', 'Salary');
-        data.addColumn('boolean', 'Full Time Employee');
         data.addColumn('string', 'extra fields');
         data.addRows([
-          ['Mike',  {v: 10000, f: '$10,000'}, true, "{'wife\'s salary':$15,000, 'kids salary':[$1,000, $5,000, $23,000], 'apartment size':42, 'etc':'...'}"],
-          ['Jim',   {v:8000,   f: '$8,000'},  false, "{'wife\'s salary':$8,000, 'apartment size':100, 'etc':'...'}"],
-          ['Alice', {v: 12500, f: '$12,500'}, true, "{'wife\'s salary':$15,000, 'kids salary':[$1,000, $4,000, $100,000], 'apartment size':78, 'etc':'...'}"],
-          ['Bob',   {v: 7000,  f: '$7,000'},  true, "{'etc':'...'}"],
+          ['Mike',  {v: 10000, f: '$10,000'},  "{'wife\'s salary':$15,000, 'kids salary':[$1,000, $5,000, $23,000], 'apartment size':42, 'etc':'...'}"],
+          ['Jim',   {v:8000,   f: '$8,000'},   "{'wife\'s salary':$8,000, 'apartment size':100, 'etc':'...'}"],
+          ['Alice', {v: 12500, f: '$12,500'},  "{'wife\'s salary':$15,000, 'kids salary':[$1,000, $4,000, $100,000], 'apartment size':78, 'etc':'...'}"],
+          ['Bob',   {v: 7000,  f: '$7,000'},   "{'etc':'...'}"],
         ]);
 
         var table = new google.visualization.Table(document.getElementById('usage_table_4'));
