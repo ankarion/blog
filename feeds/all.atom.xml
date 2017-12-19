@@ -7,16 +7,18 @@
 &lt;p&gt;Yahoo! Cloud Serving Benchmark&lt;/p&gt;
 &lt;p&gt;Comming soon&lt;/p&gt;</content></entry><entry><title>Jsonb</title><link href="https://ankarion.github.io/blog/jsonb.html" rel="alternate"></link><published>2017-12-14T12:20:00+01:00</published><updated>2017-12-14T12:20:00+01:00</updated><author><name>Bykov Anthony</name></author><id>tag:ankarion.github.io,2017-12-14:/blog/jsonb.html</id><summary type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
 
-&lt;p&gt;In this article I was going to explain why and when jsonb is better than 3NF, clarify the differences between json and jsonb.&lt;/p&gt;
-&lt;h1&gt;Definition&lt;/h1&gt;
-&lt;p&gt;At first glance, jsonb looks like a usual json except for some differences in guts:&lt;/p&gt;
-&lt;script type="text/javascript"&gt;
-      google.charts.load('current', {'packages':['table']});
-      google.charts.setOnLoadCallback(drawTable);
+&lt;p&gt;Outline:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;definition&lt;/strong&gt; section contains link to official documentation and some thoughts about it.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;usage&lt;/strong&gt; section - for those who was interested in usage of jsonb. It contains description of the project I used to work with and some comments on how it should be implemented.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;benchmarks&lt;/strong&gt; - contains velocity comparison of jsonb …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
 
-      function …&lt;/script&gt;</summary><content type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
-
-&lt;p&gt;In this article I was going to explain why and when jsonb is better than 3NF, clarify the differences between json and jsonb.&lt;/p&gt;
+&lt;p&gt;Outline:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;definition&lt;/strong&gt; section contains link to official documentation and some thoughts about it.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;usage&lt;/strong&gt; section - for those who was interested in usage of jsonb. It contains description of the project I used to work with and some comments on how it should be implemented.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;benchmarks&lt;/strong&gt; - contains velocity comparison of jsonb and json.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h1&gt;Definition&lt;/h1&gt;
 &lt;p&gt;At first glance, jsonb looks like a usual json except for some differences in guts:&lt;/p&gt;
 &lt;script type="text/javascript"&gt;
@@ -44,12 +46,11 @@
 
 &lt;div id="definition_table"&gt;&lt;/div&gt;
 
-&lt;p&gt;But don't be fooled by this table. Jsonb is much more complex then json.&lt;/p&gt;
+&lt;p&gt;But don't be fooled by this data. Jsonb is much more complex then json. &lt;a href="https://www.postgresql.org/docs/9.6/static/functions-json.html"&gt;Here&lt;/a&gt; you can find full definition of jsonb.&lt;/p&gt;
 &lt;h1&gt;Usage&lt;/h1&gt;
-&lt;p&gt;Long story short, I will suggest using jsonb in a case when your tables are too sparse. The following chapter will explain this.&lt;/p&gt;
+&lt;p&gt;Long story short, I will suggest using jsonb in case when your tables are too sparse. The following chapter will explain this.&lt;/p&gt;
 &lt;h2&gt;Project&lt;/h2&gt;
-&lt;p&gt;I would like to start explanations with description of the project I used to work with.&lt;/p&gt;
-&lt;p&gt;Let's imagine that we have a beautiful project with data in &lt;a href="https://en.wikipedia.org/wiki/Third_normal_form"&gt;3NF&lt;/a&gt;, everything works fine and fast. Let's look at our beautiful table of users:&lt;/p&gt;
+&lt;p&gt;Let's imagine that we have a beautiful project with data in &lt;a href="https://en.wikipedia.org/wiki/Third_normal_form"&gt;3NF&lt;/a&gt;, everything works fine and fast. Let's look at our beautiful table of &lt;strong&gt;users&lt;/strong&gt;:&lt;/p&gt;
 &lt;script type="text/javascript"&gt;
       google.charts.load('current', {'packages':['table']});
       google.charts.setOnLoadCallback(drawTable);
@@ -58,60 +59,32 @@
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Name');
         data.addColumn('number', 'Salary');
-        data.addColumn('boolean', 'Full Time Employee');
         data.addRows([
-          ['Mike',  {v: 10000, f: '$10,000'}, true],
-          ['Jim',   {v:8000,   f: '$8,000'},  false],
-          ['Alice', {v: 12500, f: '$12,500'}, true],
-          ['Bob',   {v: 7000,  f: '$7,000'},  true],
+          ['Mike',  {v: 10000, f: '$10,000'}],
+          ['Jim',   {v:8000,   f: '$8,000'}],
+          ['Alice', {v: 12500, f: '$12,500'}],
+          ['Bob',   {v: 7000,  f: '$7,000'}],
         ]);
 
         var table = new google.visualization.Table(document.getElementById('usage_table'));
 
-        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+        table.draw(data, {showRowNumber: true, width: '30%', height: '30%'});
       }
 &lt;/script&gt;
 
+&lt;p&gt;&lt;center&gt;
 &lt;div id="usage_table"&gt;&lt;/div&gt;
-
+&lt;/center&gt;&lt;/p&gt;
 &lt;p&gt;And suddenly our customer wants to add more features:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;wife's salary (should be null if a user doesn't have one)&lt;/li&gt;
-&lt;li&gt;kids salary (should be null if a user doesn't have one)&lt;/li&gt;
-&lt;li&gt;apartment size, squared matters (should also be null if a user doesn't have one)&lt;/li&gt;
+&lt;li&gt;kid's salary (should be null if a user doesn't have one)&lt;/li&gt;
+&lt;li&gt;apartment size square meters (should also be null if a user doesn't have one)&lt;/li&gt;
 &lt;li&gt;if a user is an admin - add fields like "when it became an admin" &lt;/li&gt;
 &lt;li&gt;if a user is an elf - add the id of his tree&lt;/li&gt;
 &lt;li&gt;etc&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;So, we will have a really sparse table and here starts data science (something like information retrieval). Not the offline one - customer wants hot data and concurrent. As far as we good at googling, we find python library that perfectly fits our (customer's) demands (&lt;a href="https://pandas.pydata.org/"&gt;pandas&lt;/a&gt;). After we've installed it (via &lt;a href=""&gt;installation guide&lt;/a&gt;) we can see that CPU usage raised dramatically. That happens because we need to rebuild the whole table each time into feature list. One of the possible solutions is to store it in database:&lt;/p&gt;
-&lt;script type="text/javascript"&gt;
-      google.charts.load('current', {'packages':['table']});
-      google.charts.setOnLoadCallback(drawTable);
-
-      function drawTable() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Name');
-        data.addColumn('number', 'Salary');
-        data.addColumn('number', 'wife\'s salary');
-        data.addColumn('number', 'kids salary');
-        data.addColumn('number', 'apartment size');
-        data.addColumn('string', 'etc');
-        data.addRows([
-          ['Mike',  {v: 10000, f: '$10,000'},  {v: 1000, f: '$1,000'}, {v: 15000, f: '$10,000'}, 42, '...'],
-          ['Jim',   {v:8000,   f: '$8,000'},   {v: 8000, f: '$8,000'}, null, 100, '...'],
-          ['Alice', {v: 12500, f: '$12,500'},  null, {v: 10000, f: '$10,000'}, 78, '...'],
-          ['Bob',   {v: 7000,  f: '$7,000'},   null, null, null, '...'],
-        ]);
-
-        var table = new google.visualization.Table(document.getElementById('usage_table_2'));
-
-        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
-      }
-&lt;/script&gt;
-
-&lt;div id="usage_table_2"&gt;&lt;/div&gt;
-
-&lt;p&gt;This approach has some significant drawbacks. One of them is a huge amount of fields(columns) and redundant information in tables: just imagine what happens if Make, for example, and Alice have 3 children each? All the fields our customer wanted to add will be repeated for each child:&lt;/p&gt;
+&lt;p&gt;Adding all those field to the table has some significant drawbacks. One of them is a huge amount of fields(columns) and redundant information in tables: just imagine what happens if Mike, for example, and Alice have 3 children each? All the fields our customer wanted to add will be repeated for each child:&lt;/p&gt;
 &lt;script type="text/javascript"&gt;
       google.charts.load('current', {'packages':['table']});
       google.charts.setOnLoadCallback(drawTable);
@@ -137,15 +110,16 @@
 
         var table = new google.visualization.Table(document.getElementById('usage_table_3'));
 
-        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+        table.draw(data, {showRowNumber: true, width: '90%', height: '90%'});
       }
 &lt;/script&gt;
 
+&lt;p&gt;&lt;center&gt;
 &lt;div id="usage_table_3"&gt;&lt;/div&gt;
-
+&lt;/center&gt;&lt;/p&gt;
 &lt;p&gt;As a result, our pretty 4 by 4 table became a 100500 by 100500 monster! We can fix it in 2 different ways: normalization or jsonb.&lt;/p&gt;
 &lt;h3&gt;Normalization&lt;/h3&gt;
-&lt;p&gt;When we added new fields, we broke normalization. So, we need to return data back to 3NF in order to reduce sizes of that monster.&lt;/p&gt;
+&lt;p&gt;The first idea is to return data back to &lt;a href="https://en.wikipedia.org/wiki/Third_normal_form"&gt;3NF&lt;/a&gt; in order to reduce sizes of that monster.&lt;/p&gt;
 &lt;script type="text/javascript"&gt;
       google.charts.load('current', {'packages':['table']});
       google.charts.setOnLoadCallback(drawTable);
@@ -187,16 +161,17 @@
       }
 &lt;/script&gt;
 
+&lt;p&gt;&lt;center&gt;&lt;div id="entities"&gt;&lt;/div&gt;&lt;/center&gt;
 &lt;table&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;b&gt;users:&lt;/b&gt;&lt;div id="normalization_table_1"&gt;&lt;/div&gt;&lt;/td&gt;
 &lt;td&gt;&lt;b&gt;kids:&lt;/b&gt;&lt;div id="normalization_table_2"&gt;&lt;/div&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;/table&gt;
-
+&lt;/table&gt;&lt;/p&gt;
+&lt;p&gt;As you can see in the example, Mike has a wife(Alice) and they have only one kid with salary $15,000, but they have 2 more kids from other marriage.&lt;/p&gt;
 &lt;!-- TODO: add more tables --&gt;
 
-&lt;p&gt;So, we'll have about 100500 different tables with 2-3 tuples. The problem we can run into is complexity of joins.&lt;/p&gt;
+&lt;p&gt;We'll have about 100500 different tables with 2-3 tuples. The problem we can run into is a complexity of joins. Let's look at other solution.&lt;/p&gt;
 &lt;h3&gt;Jsonb&lt;/h3&gt;
 &lt;p&gt;This is where json comes. We can put all those fields (especially about kids) into json:&lt;/p&gt;
 &lt;script type="text/javascript"&gt;
