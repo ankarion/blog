@@ -6,7 +6,7 @@ Category: PostgreSQL
 
 [//]: <> (# Jsonb outline:- definition- usage- benchmarks- future work)
 
-Outline:
+# Outline
 	
 - **definition** section contains link to official documentation and some thoughts about it.
 - **usage** section - for those who was interested in usage of jsonb. It contains description of the project I used to work with and some comments on how it should be implemented.
@@ -28,13 +28,13 @@ At first glance, jsonb looks like a usual json except for some differences in gu
         
         // TODO: find out how to show spaces!!!
         data.addRows([
-          ['unique keys', 'select \'{"0":0, "1":1,"0":2}\'::json;','{"0":0, "1":1, "0":2}', '{"1":1, "0":2}'],
-          ['no identation',  'select \'{"0":0, "1":1,        "0":2}\'::json;',  '{"0":0, "1":1,        "0":2}', '{"1":1, "0":2}']
+          ['unique keys', 'select \'{"0":0, "1":1, "0":2}\'::json;','{"0":0, "1":1, "0":2}', '{"1":1, "0":2}'],
+          ['no identation',  'select \'{"0":0, "1":1,&nbsp;&nbsp;&nbsp;&nbsp;"0":2}\'::json;',  '{"0":0, "1":1, &nbsp;&nbsp;&nbsp;&nbsp;"0":2}', '{"1":1, "0":2}']
         ]);
 		
         var table = new google.visualization.Table(document.getElementById('definition_table'));
 
-        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%', allowHtml: true});
       }
 </script>
 <div id="definition_table"></div>
@@ -206,11 +206,34 @@ This is where json comes. We can put all those fields (especially about kids) in
 So, we have 5 by 4 table now.
 
 # Benchmarks:
-## without jsonb at all
-The key concept of this point is to check how much space and time can jsonb save if the data in the database is hardly structured.
+Let's assume that we all agree that json and jsonb are both useful. But what is better(faster)? This question will be answered in the following benchmark. [Here][pyGen] you can find a python script I used to generate tests. 
 
-## json vs jsonb
-Let's assume that we all agree that json and jsonb are both useful. But what is better(faster)? This question will be answered in the following benchmark. [Here][pyGen] you can find a python script I used to generate tests. Actually, all of the benchmark tests look like 
+Benchmarking proccesss is divided into two stages: 
+
+- the init part, which is not going to be taken into account.
+- the workload part, which is going to be evaluated.
+
+In "init" part, we initialize the functions which transforms objects into perl and then parses it back to plpgsql language:
+```sql
+CREATE EXTENSION jsonb_plperlu CASCADE;
+
+CREATE FUNCTION test1(val jsonb) RETURNS jsonb
+LANGUAGE plperlu
+TRANSFORM FOR TYPE jsonb
+AS $$
+return (%_[0]);
+$$;
+
+CREATE FUNCTION test2(val text) RETURNS text
+LANGUAGE plperlu
+AS $$
+use JSON;
+my $hash = decode_json($_[0]);
+return encode_json $hash;
+$$;
+```
+
+The workload looks like 
 ```sql
 select testold('{}'::json)::json;
 ```
@@ -218,7 +241,6 @@ or
 ```sql
 select testnew('{}'::jsonb);
 ```
-Where *"testnew"* is used to test jsonb and *"testold"* is used to test json so that we can clearly define what were the results of jsonb and json.
 
 <script type="text/javascript">
      var data;
