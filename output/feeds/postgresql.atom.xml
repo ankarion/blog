@@ -7,13 +7,13 @@
 &lt;p&gt;Yahoo! Cloud Serving Benchmark&lt;/p&gt;
 &lt;p&gt;Comming soon&lt;/p&gt;</content></entry><entry><title>Jsonb</title><link href="https://ankarion.github.io/blog/jsonb.html" rel="alternate"></link><published>2017-12-14T12:20:00+01:00</published><updated>2017-12-14T12:20:00+01:00</updated><author><name>Bykov Anthony</name></author><id>tag:ankarion.github.io,2017-12-14:/blog/jsonb.html</id><summary type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
 
-&lt;p&gt;Outline:&lt;/p&gt;
+&lt;h1&gt;Outline&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;definition&lt;/strong&gt; section contains link to official documentation and some thoughts about it.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;usage&lt;/strong&gt; section - for those who was interested in usage of jsonb. It contains description of the project I used to work with and some comments on how it should be implemented.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;benchmarks&lt;/strong&gt; - contains velocity comparison of jsonb …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
 
-&lt;p&gt;Outline:&lt;/p&gt;
+&lt;h1&gt;Outline&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;definition&lt;/strong&gt; section contains link to official documentation and some thoughts about it.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;usage&lt;/strong&gt; section - for those who was interested in usage of jsonb. It contains description of the project I used to work with and some comments on how it should be implemented.&lt;/li&gt;
@@ -34,13 +34,13 @@
 
         // TODO: find out how to show spaces!!!
         data.addRows([
-          ['unique keys', 'select \'{"0":0, "1":1,"0":2}\'::json;','{"0":0, "1":1, "0":2}', '{"1":1, "0":2}'],
-          ['no identation',  'select \'{"0":0, "1":1,        "0":2}\'::json;',  '{"0":0, "1":1,        "0":2}', '{"1":1, "0":2}']
+          ['unique keys', 'select \'{"0":0, "1":1, "0":2}\'::json;','{"0":0, "1":1, "0":2}', '{"1":1, "0":2}'],
+          ['no identation',  'select \'{"0":0, "1":1,&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;"0":2}\'::json;',  '{"0":0, "1":1, &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;"0":2}', '{"1":1, "0":2}']
         ]);
 
         var table = new google.visualization.Table(document.getElementById('definition_table'));
 
-        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%', allowHtml: true});
       }
 &lt;/script&gt;
 
@@ -200,10 +200,33 @@
 
 &lt;p&gt;So, we have 5 by 4 table now.&lt;/p&gt;
 &lt;h1&gt;Benchmarks:&lt;/h1&gt;
-&lt;h2&gt;without jsonb at all&lt;/h2&gt;
-&lt;p&gt;The key concept of this point is to check how much space and time can jsonb save if the data in the database is hardly structured.&lt;/p&gt;
-&lt;h2&gt;json vs jsonb&lt;/h2&gt;
-&lt;p&gt;Let's assume that we all agree that json and jsonb are both useful. But what is better(faster)? This question will be answered in the following benchmark. &lt;a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py"&gt;Here&lt;/a&gt; you can find a python script I used to generate tests. Actually, all of the benchmark tests look like &lt;/p&gt;
+&lt;p&gt;Let's assume that we all agree that json and jsonb are both useful. But what is better(faster)? This question will be answered in the following benchmark. &lt;a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py"&gt;Here&lt;/a&gt; you can find a python script I used to generate tests. &lt;/p&gt;
+&lt;p&gt;Benchmarking proccesss is divided into two stages: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;the init part, which is not going to be taken into account.&lt;/li&gt;
+&lt;li&gt;the workload part, which is going to be evaluated.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In "init" part, we initialize the functions which transforms objects into perl and then parses it back to plpgsql language:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="n"&gt;EXTENSION&lt;/span&gt; &lt;span class="n"&gt;jsonb_plperlu&lt;/span&gt; &lt;span class="k"&gt;CASCADE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="k"&gt;FUNCTION&lt;/span&gt; &lt;span class="n"&gt;test1&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;jsonb&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;RETURNS&lt;/span&gt; &lt;span class="n"&gt;jsonb&lt;/span&gt;
+&lt;span class="k"&gt;LANGUAGE&lt;/span&gt; &lt;span class="n"&gt;plperlu&lt;/span&gt;
+&lt;span class="k"&gt;TRANSFORM&lt;/span&gt; &lt;span class="k"&gt;FOR&lt;/span&gt; &lt;span class="k"&gt;TYPE&lt;/span&gt; &lt;span class="n"&gt;jsonb&lt;/span&gt;
+&lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="err"&gt;$$&lt;/span&gt;
+&lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+&lt;span class="err"&gt;$$&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="k"&gt;FUNCTION&lt;/span&gt; &lt;span class="n"&gt;test2&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="nb"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;RETURNS&lt;/span&gt; &lt;span class="nb"&gt;text&lt;/span&gt;
+&lt;span class="k"&gt;LANGUAGE&lt;/span&gt; &lt;span class="n"&gt;plperlu&lt;/span&gt;
+&lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="err"&gt;$$&lt;/span&gt;
+&lt;span class="n"&gt;use&lt;/span&gt; &lt;span class="n"&gt;JSON&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;my&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;decode_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+&lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;encode_json&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;hash&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="err"&gt;$$&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The workload looks like &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;select&lt;/span&gt; &lt;span class="n"&gt;testold&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;{}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;)::&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -213,7 +236,6 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Where &lt;em&gt;"testnew"&lt;/em&gt; is used to test jsonb and &lt;em&gt;"testold"&lt;/em&gt; is used to test json so that we can clearly define what were the results of jsonb and json.&lt;/p&gt;
 &lt;script type="text/javascript"&gt;
      var data;
      var chart;
