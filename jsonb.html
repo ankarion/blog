@@ -39,7 +39,7 @@
 
 </footer><!-- /.post-info -->      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-<p>Outline:</p>
+<h1>Outline</h1>
 <ul>
 <li><strong>definition</strong> section contains link to official documentation and some thoughts about it.</li>
 <li><strong>usage</strong> section - for those who was interested in usage of jsonb. It contains description of the project I used to work with and some comments on how it should be implemented.</li>
@@ -60,13 +60,13 @@
 
         // TODO: find out how to show spaces!!!
         data.addRows([
-          ['unique keys', 'select \'{"0":0, "1":1,"0":2}\'::json;','{"0":0, "1":1, "0":2}', '{"1":1, "0":2}'],
-          ['no identation',  'select \'{"0":0, "1":1,        "0":2}\'::json;',  '{"0":0, "1":1,        "0":2}', '{"1":1, "0":2}']
+          ['unique keys', 'select \'{"0":0, "1":1, "0":2}\'::json;','{"0":0, "1":1, "0":2}', '{"1":1, "0":2}'],
+          ['no identation',  'select \'{"0":0, "1":1,&nbsp;&nbsp;&nbsp;&nbsp;"0":2}\'::json;',  '{"0":0, "1":1, &nbsp;&nbsp;&nbsp;&nbsp;"0":2}', '{"1":1, "0":2}']
         ]);
 
         var table = new google.visualization.Table(document.getElementById('definition_table'));
 
-        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%', allowHtml: true});
       }
 </script>
 
@@ -226,10 +226,33 @@
 
 <p>So, we have 5 by 4 table now.</p>
 <h1>Benchmarks:</h1>
-<h2>without jsonb at all</h2>
-<p>The key concept of this point is to check how much space and time can jsonb save if the data in the database is hardly structured.</p>
-<h2>json vs jsonb</h2>
-<p>Let's assume that we all agree that json and jsonb are both useful. But what is better(faster)? This question will be answered in the following benchmark. <a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py">Here</a> you can find a python script I used to generate tests. Actually, all of the benchmark tests look like </p>
+<p>Let's assume that we all agree that json and jsonb are both useful. But what is better(faster)? This question will be answered in the following benchmark. <a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py">Here</a> you can find a python script I used to generate tests. </p>
+<p>Benchmarking proccesss is divided into two stages: </p>
+<ul>
+<li>the init part, which is not going to be taken into account.</li>
+<li>the workload part, which is going to be evaluated.</li>
+</ul>
+<p>In "init" part, we initialize the functions which transforms objects into perl and then parses it back to plpgsql language:</p>
+<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="n">EXTENSION</span> <span class="n">jsonb_plperlu</span> <span class="k">CASCADE</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">test1</span><span class="p">(</span><span class="n">val</span> <span class="n">jsonb</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">jsonb</span>
+<span class="k">LANGUAGE</span> <span class="n">plperlu</span>
+<span class="k">TRANSFORM</span> <span class="k">FOR</span> <span class="k">TYPE</span> <span class="n">jsonb</span>
+<span class="k">AS</span> <span class="err">$$</span>
+<span class="k">return</span> <span class="p">(</span><span class="o">%</span><span class="n">_</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="err">$$</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">test2</span><span class="p">(</span><span class="n">val</span> <span class="nb">text</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="nb">text</span>
+<span class="k">LANGUAGE</span> <span class="n">plperlu</span>
+<span class="k">AS</span> <span class="err">$$</span>
+<span class="n">use</span> <span class="n">JSON</span><span class="p">;</span>
+<span class="n">my</span> <span class="err">$</span><span class="n">hash</span> <span class="o">=</span> <span class="n">decode_json</span><span class="p">(</span><span class="err">$</span><span class="n">_</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="k">return</span> <span class="n">encode_json</span> <span class="err">$</span><span class="n">hash</span><span class="p">;</span>
+<span class="err">$$</span><span class="p">;</span>
+</pre></div>
+
+
+<p>The workload looks like </p>
 <div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">testold</span><span class="p">(</span><span class="s1">&#39;{}&#39;</span><span class="p">::</span><span class="n">json</span><span class="p">)::</span><span class="n">json</span><span class="p">;</span>
 </pre></div>
 
@@ -239,7 +262,6 @@
 </pre></div>
 
 
-<p>Where <em>"testnew"</em> is used to test jsonb and <em>"testold"</em> is used to test json so that we can clearly define what were the results of jsonb and json.</p>
 <script type="text/javascript">
      var data;
      var chart;
