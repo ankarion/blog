@@ -267,7 +267,7 @@
      var chart;
 
       // Load the Visualization API and the piechart package.
-      google.charts.load('current', {'packages':['corechart']});
+      google.charts.load('current', {'packages':['line']});
 
       // Set a callback to run when the Google Visualization API is loaded.
       google.charts.setOnLoadCallback(drawChart);
@@ -278,52 +278,63 @@
       function drawChart() {
         data = new google.visualization.DataTable();
         data.addColumn('number', 'json size');
-        data.addColumn('number', 'latency_old, s');
-        data.addColumn('number', 'latency_new, s');
+        data.addColumn('number', 'latency_old');
+        data.addColumn('number', 'latency_new');
         data.addRows([
-          [1,       7.208,      2.77],
-          [1001,    53.411,     9.285],
-          [2001,    103.929,    16.214],
-          [3001,    157.989,    25.814],
-          [4001,    204.865,    31.78],
-          [5001,    259.243,    40.423],
-          [6001,    309.912,    49.886],
-          [7001,    359.798,    53.999],
-          [8001,    414.597,    63.592],
-          [9001,    481.893,    74.574],
-          [10001,   520.906,    80.629],
-          [11001,   573.934,    87.01],
-          [12001,   630.937,    94.384],
-          [13001,   686.475,    103.035],
-          [14001,   744.054,    113.548],
-          [15001,   798.305,    116.316],
-          [16001,   861.136,    126.024],
-          [17001,   916.432,    148.425],
-          [18001,   979.769,    151.548],
-          [19001,   1050.776,   161.134],
-          [20001,   1084.992,   169.715],
-          [21001,   1149.904,   181.003],
-          [22001,   1189.699,   185.644],
-          [23001,   1237.404,   192.815],
-          [24001,   1298.407,   199.408],
-          [25001,   1348.316,   209.455],
-          [26001,   1431.793,   221.336],
-          [27001,   1474.972,   219.977],
-          [28001,   1510.263,   225.925],
-          [29001,   1574.153,   241.067]
+          [{v:1,f:'1 object'},      {v:7.208,f:'0.007208s'}, {v:2.77,f:'0.00277s'}],
+          [{v:1001,f:'1001 objects'},   {v:53.411,f:'0.053411s'}, {v:9.285,f:'0.009285s'}],
+          [{v:2001,f:'2001 objects'},   {v:103.929,f:'0.103929s'}, {v:16.214,f:'0.016214s'}],
+          [{v:3001,f:'3001 objects'},   {v:157.989,f:'0.157989s'}, {v:25.814,f:'0.025814s'}],
+          [{v:4001,f:'4001 objects'},   {v:204.865,f:'0.204865s'}, {v:31.78,f:'0.03178s'}],
+          [{v:5001,f:'5001 objects'},   {v:259.243,f:'0.259243s'}, {v:40.423,f:'0.040423s'}],
+          [{v:6001,f:'6001 objects'},   {v:309.912,f:'0.309912s'}, {v:49.886,f:'0.049886s'}],
+          [{v:7001,f:'7001 objects'},   {v:359.798,f:'0.359798s'}, {v:53.999,f:'0.053999s'}],
+          [{v:8001,f:'8001 objects'},   {v:414.597,f:'0.414597s'}, {v:63.592,f:'0.063592s'}],
+          [{v:9001,f:'9001 objects'},   {v:481.893,f:'0.481893s'}, {v:74.574,f:'0.074574s'}],
+          [{v:10001,f:'10001 objects'}, {v:520.906,f:'0.520906s'}, {v:80.629,f:'0.080629s'}],
+          [{v:11001,f:'11001 objects'}, {v:573.934,f:'0.573934s'}, {v:87.01,f:'0.08701s'}],
+          [{v:12001,f:'12001 objects'}, {v:630.937,f:'0.630937s'}, {v:94.384,f:'0.094384s'}],
+          [{v:13001,f:'13001 objects'}, {v:686.475,f:'0.686475s'}, {v:103.035,f:'0.103035s'}],
+          [{v:14001,f:'14001 objects'}, {v:744.054,f:'0.744054s'}, {v:113.548,f:'0.113548s'}],
+          [{v:15001,f:'15001 objects'}, {v:798.305,f:'0.798305s'}, {v:116.316,f:'0.116316s'}],
+          [{v:16001,f:'16001 objects'}, {v:861.136,f:'0.861136s'}, {v:126.024,f:'0.126024s'}],
+          [{v:17001,f:'17001 objects'}, {v:916.432,f:'0.916432s'}, {v:148.425,f:'0.148425s'}],
+          [{v:18001,f:'18001 objects'}, {v:979.769,f:'0.979769s'}, {v:151.548,f:'0.151548s'}],
+          [{v:19001,f:'19001 objects'}, {v:1050.776,f:'1.050776s'}, {v:161.134,f:'0.161134s'}],
+          [{v:20001,f:'20001 objects'}, {v:1084.992,f:'1.084992s'}, {v:169.715,f:'0.169715s'}],
+          [{v:21001,f:'21001 objects'}, {v:1149.904,f:'1.149904s'}, {v:181.003,f:'0.181003s'}],
+          [{v:22001,f:'22001 objects'}, {v:1189.699,f:'1.189699s'}, {v:185.644,f:'0.185644s'}],
+          [{v:23001,f:'23001 objects'}, {v:1237.404,f:'1.237404s'}, {v:192.815,f:'0.192815s'}],
+          [{v:24001,f:'24001 objects'}, {v:1298.407,f:'1.298407s'}, {v:199.408,f:'0.199408s'}],
+          [{v:25001,f:'25001 objects'}, {v:1348.316,f:'1.348316s'}, {v:209.455,f:'0.209455s'}],
+          [{v:26001,f:'26001 objects'}, {v:1431.793,f:'1.431793s'}, {v:221.336,f:'0.221336s'}],
+          [{v:27001,f:'27001 objects'}, {v:1474.972,f:'1.474972s'}, {v:219.977,f:'0.219977s'}],
+          [{v:28001,f:'28001 objects'}, {v:1510.263,f:'1.510263s'}, {v:225.925,f:'0.225925s'}],
+          [{v:29001,f:'29001 objects'}, {v:1574.153,f:'1.574153s'}, {v:241.067,f:'0.241067s'}]
         ]);
 
         // Set chart options
         var options = {
-            title:'Differences in latency',
-            curveType: 'function',
-            legend: { position: 'right' }
+            hAxis: {
+              title: 'Json size',
+              gridlines:{
+                count: 3,
+                color: '#CCC'
+                }
+            },
+            vAxis: {
+              title: 'Latency, msec',
+              gridlines:{
+                count: 3,
+                color: '#CCC'
+                }
+            }
             };
 
         // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        var chart = new google.charts.Line(document.getElementById('chart_div'));
         // google.visualization.events.addListener(chart, 'select', selectHandler);
-        chart.draw(data, options);
+        chart.draw(data, google.charts.Line.convertOptions(options));
       }
 
       function selectHandler() {
@@ -334,9 +345,9 @@
 
 </script>
 
-<div id="chart_div" style="width:400; height:700"></div>
-
-<h1>Future work:</h1>
+<p><center>
+<div id="chart_div" style="width:90%; height:700"></div>
+</center></p>
     </div><!-- /.entry-content -->
 
   </article>
