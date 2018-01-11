@@ -140,8 +140,8 @@ For example, we want to represent postgresql type "hstore" as a perl type. This 
       function drawChart() {
         data = new google.visualization.DataTable();
         data.addColumn('number', 'json size');
-        data.addColumn('number', 'latency_old');
-        data.addColumn('number', 'latency_new');
+        data.addColumn('number', 'bad practise');
+        data.addColumn('number', 'transform');
         data.addRows([
           [{v:1,f:'1 object'},      {v:7.208,f:'0.007208s'}, {v:2.77,f:'0.00277s'}],
           [{v:1001,f:'1001 objects'},   {v:53.411,f:'0.053411s'}, {v:9.285,f:'0.009285s'}],
