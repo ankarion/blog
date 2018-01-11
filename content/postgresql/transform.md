@@ -42,7 +42,7 @@ It is not always the easiest solution, but the good news is that these transform
 create extension jsonb_plperl;
 ```
 
-And in definition of the function transform usage should be specified:
+And in the definition of the function transform usage should be specified:
 
 ```sql
 TRANSFORM FOR TYPE jsonb
@@ -53,7 +53,7 @@ So, all your SQL code will look like this:
 ```sql
 CREATE EXTENSION jsonb_plperl CASCADE;
 
-CREATE FUNCTION bla(val jsonb) RETURNS jsonb
+CREATE FUNCTION blah(val jsonb) RETURNS jsonb
 LANGUAGE plperl
 TRANSFORM FOR TYPE jsonb
 AS $$
@@ -67,7 +67,7 @@ $$;
 [Here][pyGen] you can find a python script I used to generate tests.
 
 
-Benchmarking proccesss is divided into two stages: 
+Benchmarking process is divided into two stages: 
 
 - the init part, which is not going to be taken into account.
 - the workload part, which is going to be evaluated.
