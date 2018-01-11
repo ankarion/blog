@@ -63,7 +63,7 @@ For example, we want to represent postgresql type "hstore" as a perl type. This 
 </pre></div>
 
 
-<p>And in definition of the function transform usage should be specified:</p>
+<p>And in the definition of the function transform usage should be specified:</p>
 <div class="highlight"><pre><span></span><span class="k">TRANSFORM</span> <span class="k">FOR</span> <span class="k">TYPE</span> <span class="n">jsonb</span>
 </pre></div>
 
@@ -71,7 +71,7 @@ For example, we want to represent postgresql type "hstore" as a perl type. This 
 <p>So, all your SQL code will look like this:</p>
 <div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="n">EXTENSION</span> <span class="n">jsonb_plperl</span> <span class="k">CASCADE</span><span class="p">;</span>
 
-<span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">bla</span><span class="p">(</span><span class="n">val</span> <span class="n">jsonb</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">jsonb</span>
+<span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">blah</span><span class="p">(</span><span class="n">val</span> <span class="n">jsonb</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">jsonb</span>
 <span class="k">LANGUAGE</span> <span class="n">plperl</span>
 <span class="k">TRANSFORM</span> <span class="k">FOR</span> <span class="k">TYPE</span> <span class="n">jsonb</span>
 <span class="k">AS</span> <span class="err">$$</span>
@@ -84,7 +84,7 @@ For example, we want to represent postgresql type "hstore" as a perl type. This 
 
 <h1>Benchmarks</h1>
 <p><a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py">Here</a> you can find a python script I used to generate tests.</p>
-<p>Benchmarking proccesss is divided into two stages: </p>
+<p>Benchmarking process is divided into two stages: </p>
 <ul>
 <li>the init part, which is not going to be taken into account.</li>
 <li>the workload part, which is going to be evaluated.</li>

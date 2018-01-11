@@ -33,7 +33,7 @@ For example, we want to represent postgresql type "hstore" as a perl type. This 
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;And in definition of the function transform usage should be specified:&lt;/p&gt;
+&lt;p&gt;And in the definition of the function transform usage should be specified:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;TRANSFORM&lt;/span&gt; &lt;span class="k"&gt;FOR&lt;/span&gt; &lt;span class="k"&gt;TYPE&lt;/span&gt; &lt;span class="n"&gt;jsonb&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -41,7 +41,7 @@ For example, we want to represent postgresql type "hstore" as a perl type. This 
 &lt;p&gt;So, all your SQL code will look like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="n"&gt;EXTENSION&lt;/span&gt; &lt;span class="n"&gt;jsonb_plperl&lt;/span&gt; &lt;span class="k"&gt;CASCADE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="k"&gt;FUNCTION&lt;/span&gt; &lt;span class="n"&gt;bla&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;jsonb&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;RETURNS&lt;/span&gt; &lt;span class="n"&gt;jsonb&lt;/span&gt;
+&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="k"&gt;FUNCTION&lt;/span&gt; &lt;span class="n"&gt;blah&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;jsonb&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;RETURNS&lt;/span&gt; &lt;span class="n"&gt;jsonb&lt;/span&gt;
 &lt;span class="k"&gt;LANGUAGE&lt;/span&gt; &lt;span class="n"&gt;plperl&lt;/span&gt;
 &lt;span class="k"&gt;TRANSFORM&lt;/span&gt; &lt;span class="k"&gt;FOR&lt;/span&gt; &lt;span class="k"&gt;TYPE&lt;/span&gt; &lt;span class="n"&gt;jsonb&lt;/span&gt;
 &lt;span class="k"&gt;AS&lt;/span&gt; &lt;span class="err"&gt;$$&lt;/span&gt;
@@ -54,7 +54,7 @@ For example, we want to represent postgresql type "hstore" as a perl type. This 
 
 &lt;h1&gt;Benchmarks&lt;/h1&gt;
 &lt;p&gt;&lt;a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py"&gt;Here&lt;/a&gt; you can find a python script I used to generate tests.&lt;/p&gt;
-&lt;p&gt;Benchmarking proccesss is divided into two stages: &lt;/p&gt;
+&lt;p&gt;Benchmarking process is divided into two stages: &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;the init part, which is not going to be taken into account.&lt;/li&gt;
 &lt;li&gt;the workload part, which is going to be evaluated.&lt;/li&gt;
