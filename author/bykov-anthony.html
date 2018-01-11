@@ -34,25 +34,56 @@
 
 </footer><!-- /.post-info --><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-<p>Jsonb is not a new feature in PostgreSQL and you can easyly find some articles (even I have <a href="https://ankarion.github.io/blog/jsonb.html">one</a>) by just <a href="http://lmgtfy.com/?q=jsonb+postgresql">googling it</a>. But while writing <a href="https://ankarion.github.io/blog/jsonb.html">my jsonb article</a> I found out that I couldn't find a propper way of working with jsonb inside <a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html">triggers</a>.</p>
-<p>After googling for a few seconds I found out that it is easier to write my own way of woking with jsonb. So, here how it worked:</p>
+<p>Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just <a href="http://lmgtfy.com/?q=jsonb+postgresql">googling it</a>. (even I have <a href="https://ankarion.github.io/blog/jsonb.html">one</a>) But while writing <a href="https://ankarion.github.io/blog/jsonb.html">my jsonb article</a> I found out that I couldn't find a propper way of working with jsonb inside <a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html">triggers</a>.</p>
+<p>After googling for a few seconds I found out that it is easier to write my own way of working with jsonb.</p>
 <p><details>
     <summary>
-        <b>Don't do that</b>
+        <b>Don't do this</b>
     </summary>
-    I've decided to use json as incoming parameter and inside the function parse it into desired object.</p>
-<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">JSON</span><span class="p">;</span>
-<span class="k">my</span> <span class="nv">$hash</span> <span class="o">=</span> <span class="n">decode_json</span><span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    I've decided to use json as the incoming parameter (which in perl is $<em>[0]) and inside the function parse it into the desired object.
+    <pre>
+<code>use JSON;
+my $hash = decode_json($</em>[0]);</code></pre>
+    I assumed that this is not the best solution because PostgreSQL 9.5+ provides <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">"create transform"</a> which is supposed to work faster.
+</details></p>
+<p>This article is dedicated to <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">transforms</a>. I will show what it is and how to use it on some simple examples, in the end of this article there is a "benchmark" section which will compare <strong>jsonb + transform</strong> vs <strong>json + decode_hash</strong> (which was described in "don't do..." part)</p>
+<h1>Definition</h1>
+<p><a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">Transforms</a> are supposed to define the way postgresql object can be represented in certain language. 
+For example, we want to represent postgresql type "hstore" as a perl type. This can be done through 4 lines of SQL code:</p>
+<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TRANSFORM</span> <span class="k">FOR</span> <span class="n">hstore</span> <span class="k">LANGUAGE</span> <span class="n">pl</span><span class="o">/</span><span class="n">perl</span> <span class="p">(</span>
+    <span class="k">FROM</span> <span class="k">SQL</span> <span class="k">WITH</span> <span class="k">FUNCTION</span> <span class="n">name_of_function_from_sql</span> <span class="p">(</span><span class="n">name_of_the_argument</span> <span class="p">[,</span> <span class="p">...]),</span>
+    <span class="k">TO</span> <span class="k">SQL</span> <span class="k">WITH</span> <span class="k">FUNCTION</span> <span class="n">name_of_function_to_sql</span> <span class="p">(</span><span class="n">name_of_the_argument</span> <span class="p">[,</span> <span class="p">...])</span>
+<span class="p">)</span>
 </pre></div>
 
 
-<p></details></p>
-<p>This article is dedicated to transforms. I will show what it is and how to use it on some simple examples, in the end of this article there is a "benchmark" section which will compare <strong>jsonb + transform</strong> vs <strong>json + decode_hash</strong></p>
-<h1>Definition</h1>
-<p>Transforms are </p>
-<h1>Usage</h1>
+<p>The problem is that we have to define those two functions <a href="https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L68">"name_of_function_from_sql"</a> and <a href="https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L101">"name_of_function_to_sql"</a>. They describe the way the object will be transformed.</p>
+<p>It is not always the easiest solution, but the good news is that these transforms are already implemented <a href="https://github.com/postgrespro/jsonb_plpython">for python</a> and <a href="https://github.com/ankarion/jsonb_plperl">perl</a> (feel free to check it out). So, the only thing you need to do is to install this extension:</p>
+<div class="highlight"><pre><span></span><span class="k">create</span> <span class="n">extension</span> <span class="n">jsonb_plperl</span><span class="p">;</span>
+</pre></div>
+
+
+<p>And in definition of the function transform usage should be specified:</p>
+<div class="highlight"><pre><span></span><span class="k">TRANSFORM</span> <span class="k">FOR</span> <span class="k">TYPE</span> <span class="n">jsonb</span>
+</pre></div>
+
+
+<p>So, all your SQL code will look like this:</p>
+<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="n">EXTENSION</span> <span class="n">jsonb_plperl</span> <span class="k">CASCADE</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">bla</span><span class="p">(</span><span class="n">val</span> <span class="n">jsonb</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">jsonb</span>
+<span class="k">LANGUAGE</span> <span class="n">plperl</span>
+<span class="k">TRANSFORM</span> <span class="k">FOR</span> <span class="k">TYPE</span> <span class="n">jsonb</span>
+<span class="k">AS</span> <span class="err">$$</span>
+    <span class="err">$</span><span class="n">val</span> <span class="o">=</span> <span class="err">$</span><span class="n">_</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">...</span>
+    <span class="k">return</span> <span class="err">$</span><span class="n">val</span><span class="p">;</span>
+<span class="err">$$</span><span class="p">;</span>
+</pre></div>
+
+
 <h1>Benchmarks</h1>
-<p>Let's assume that we all agree that json and jsonb are both useful. But what is better(faster)? This question will be answered in the following benchmark. <a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py">Here</a> you can find a python script I used to generate tests. </p>
+<p><a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py">Here</a> you can find a python script I used to generate tests.</p>
 <p>Benchmarking proccesss is divided into two stages: </p>
 <ul>
 <li>the init part, which is not going to be taken into account.</li>
