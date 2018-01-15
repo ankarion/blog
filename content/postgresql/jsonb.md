@@ -1,7 +1,6 @@
 Title: Jsonb
 Date: 2017-12-14 12:20
 Category: PostgreSQL
-Status: draft
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
