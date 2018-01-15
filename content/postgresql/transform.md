@@ -6,7 +6,7 @@ Category: PostgreSQL
 
 [//]: <> (# Jsonb outline:- definition- usage- benchmarks- future work)
 
-Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just [googling it][jsonbLMGTFY]. (even I have [one][jsonbArt]) But while writing [my jsonb article][jsonbART] I found out that I couldn't find a propper way of working with jsonb inside [triggers][triggers].
+Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just [googling it][jsonbLMGTFY]. (even I have [one][jsonbArt]) But while writing [my jsonb article][jsonbART] I found out that I couldn't find a proper way of working with jsonb inside [triggers][triggers].
 
 After googling for a few seconds I found out that it is easier to write my own way of working with jsonb.
 
@@ -21,11 +21,12 @@ my $hash = decode_json($_[0]);</code></pre>
 	I assumed that this is not the best solution because PostgreSQL 9.5+ provides ["create transform"][transform] which is supposed to work faster.
 </details>
 
+# Intro
 This article is dedicated to [transforms][transform]. I will show what it is and how to use it on some simple examples, in the end of this article there is a "benchmark" section which will compare **jsonb + transform** vs **json + decode_hash** (which was described in "don't do..." part)
 
 # Definition
-[Transforms][transform] are supposed to define the way postgresql object can be represented in certain language. 
-For example, we want to represent postgresql type "hstore" as a perl type. This can be done through 4 lines of SQL code:
+[Transforms][transform] are supposed to define the way PostgreSQL object can be represented in certain language. 
+For example, we want to represent PostgreSQL type "hstore" as a perl type. This can be done through 4 lines of SQL code:
 
 ```sql 
 CREATE TRANSFORM FOR hstore LANGUAGE pl/perl (
