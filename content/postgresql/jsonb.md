@@ -1,19 +1,14 @@
 Title: Jsonb
 Date: 2017-12-14 12:20
 Category: PostgreSQL
+Status: draft
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 [//]: <> (# Jsonb outline:- definition- usage- benchmarks- future work)
 
-In this article I want to introduce you a type "jsonb" and discuss when it is apropriate to be used.
+In this article, I want to introduce you a type "jsonb". It is not new, but it is frequently used tool in PostgreSQL.
 
-# Outline
-	
-- **definition** section contains link to official documentation and some thoughts about it.
-- **usage** section - for those who was interested in usage of jsonb. It contains description of the project I used to work with and some comments on how it should be implemented.
-
-		
 # Definition
 At first glance, jsonb looks like a usual json except for some differences in guts:
 

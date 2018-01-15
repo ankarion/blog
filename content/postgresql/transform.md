@@ -6,7 +6,7 @@ Category: PostgreSQL
 
 [//]: <> (# Jsonb outline:- definition- usage- benchmarks- future work)
 
-Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just [googling it][jsonbLMGTFY]. (even I have [one][jsonbArt]) But while writing [my jsonb article][jsonbART] I found out that I couldn't find a proper way of working with jsonb inside [triggers][triggers].
+Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just [googling it][jsonbLMGTFY]. (even I have [one][jsonbArt] in drafts) But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside [triggers][triggers].
 
 After googling for a few seconds I found out that it is easier to write my own way of working with jsonb.
 
