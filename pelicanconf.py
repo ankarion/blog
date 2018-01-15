@@ -38,6 +38,10 @@ SOCIAL = (
 		  )
 
 DEFAULT_PAGINATION = 10
+DEFAULT_METADATA = {
+		'status': 'draft',
+		}
+
 
 # PLUGINS
 PLUGIN_PATHS = ['../pelican-plugins']
