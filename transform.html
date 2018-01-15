@@ -39,7 +39,7 @@
 
 </footer><!-- /.post-info -->      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-<p>Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just <a href="http://lmgtfy.com/?q=jsonb+postgresql">googling it</a>. (even I have <a href="https://ankarion.github.io/blog/jsonb.html">one</a>) But while writing <a href="https://ankarion.github.io/blog/jsonb.html">my jsonb article</a> I found out that I couldn't find a propper way of working with jsonb inside <a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html">triggers</a>.</p>
+<p>Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just <a href="http://lmgtfy.com/?q=jsonb+postgresql">googling it</a>. (even I have <a href="https://ankarion.github.io/blog/jsonb.html">one</a>) But while writing <a href="https://ankarion.github.io/blog/jsonb.html">my jsonb article</a> I found out that I couldn't find a proper way of working with jsonb inside <a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html">triggers</a>.</p>
 <p>After googling for a few seconds I found out that it is easier to write my own way of working with jsonb.</p>
 <p><details>
     <summary>
@@ -51,10 +51,11 @@
 my $hash = decode_json($</em>[0]);</code></pre>
     I assumed that this is not the best solution because PostgreSQL 9.5+ provides <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">"create transform"</a> which is supposed to work faster.
 </details></p>
+<h1>Intro</h1>
 <p>This article is dedicated to <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">transforms</a>. I will show what it is and how to use it on some simple examples, in the end of this article there is a "benchmark" section which will compare <strong>jsonb + transform</strong> vs <strong>json + decode_hash</strong> (which was described in "don't do..." part)</p>
 <h1>Definition</h1>
-<p><a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">Transforms</a> are supposed to define the way postgresql object can be represented in certain language. 
-For example, we want to represent postgresql type "hstore" as a perl type. This can be done through 4 lines of SQL code:</p>
+<p><a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">Transforms</a> are supposed to define the way PostgreSQL object can be represented in certain language. 
+For example, we want to represent PostgreSQL type "hstore" as a perl type. This can be done through 4 lines of SQL code:</p>
 <div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TRANSFORM</span> <span class="k">FOR</span> <span class="n">hstore</span> <span class="k">LANGUAGE</span> <span class="n">pl</span><span class="o">/</span><span class="n">perl</span> <span class="p">(</span>
     <span class="k">FROM</span> <span class="k">SQL</span> <span class="k">WITH</span> <span class="k">FUNCTION</span> <span class="n">name_of_function_from_sql</span> <span class="p">(</span><span class="n">name_of_the_argument</span> <span class="p">[,</span> <span class="p">...]),</span>
     <span class="k">TO</span> <span class="k">SQL</span> <span class="k">WITH</span> <span class="k">FUNCTION</span> <span class="n">name_of_function_to_sql</span> <span class="p">(</span><span class="n">name_of_the_argument</span> <span class="p">[,</span> <span class="p">...])</span>
