@@ -220,9 +220,9 @@ Where {...} - is json which contains strings associated with it's int representa
 <div id="chart_div" style="width:90%; height:700"></div>
 </center>
 
-On this chart, you can see how bad was my first approach (the "don't do that" section) in comparison with transform. The higher graph values go, the more miliseconds corresponding method worked.
+On this chart, you can see how bad was my first approach (the "don't do that" section) in comparison with transform. The higher graph values go, the more milliseconds corresponding method worked.
 
-The "bad practise" is the first approach I've been talking about. As you can see, "transform" is a lot lower, which means that "transform" approach works a lot faster.
+The "bad practice" is the first approach I've been talking about. As you can see, "transform" grows slower, which means that "transform" approach works a lot faster. This is the reason why I called "bad practice" bad.
 
 [//]: <> (src)
 [pyGen]: https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py
