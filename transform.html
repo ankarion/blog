@@ -74,7 +74,8 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 
 
 <p>The problem is that we have to define those two functions <a href="https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L68">"name_of_function_from_sql"</a> and <a href="https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L101">"name_of_function_to_sql"</a>. They describe the way the object will be transformed.</p>
-<p>It is not always the easiest solution, but the good news is that these transforms are already implemented <a href="https://github.com/postgrespro/jsonb_plpython">for python</a> and <a href="https://github.com/ankarion/jsonb_plperl">perl</a> (feel free to check it out). So, the only thing you need to do is to install this extension:</p>
+<p>It is not always the easiest solution, but the good news is that these transforms are already implemented <a href="https://github.com/postgrespro/jsonb_plpython">for python</a> and <a href="https://github.com/ankarion/jsonb_plperl">perl</a> (feel free to check it out and participate in patch discussions <a href="https://www.postgresql.org/message-id/flat/20171024140129.6bd01f68@anthony-24-g082ur#20171024140129.6bd01f68@anthony-24-g082ur">perl</a> and <a href="https://www.postgresql.org/message-id/flat/20171025145100.3a19933f@anthony-24-g082ur/">python</a>). </p>
+<p>So, the only thing you need to do is to install an extension:</p>
 <div class="highlight"><pre><span></span><span class="k">create</span> <span class="n">extension</span> <span class="n">jsonb_plperl</span><span class="p">;</span>
 </pre></div>
 
@@ -84,7 +85,7 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 </pre></div>
 
 
-<p>So, all your SQL code will look like this:</p>
+<p>All your SQL code should look like this:</p>
 <div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="n">EXTENSION</span> <span class="n">jsonb_plperl</span> <span class="k">CASCADE</span><span class="p">;</span>
 
 <span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">blah</span><span class="p">(</span><span class="n">val</span> <span class="n">jsonb</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">jsonb</span>
@@ -99,7 +100,7 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 
 
 <h1>Benchmarks</h1>
-<p><a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py">Here</a> you can find a python script I used to generate tests.</p>
+<p>This is the most spectacular part of this article. We are going to find out which method is better(faster) - the "Don't do this" or the "transform". </p>
 <p>Benchmarking process is divided into two stages: </p>
 <ul>
 <li>the init part, which is not going to be taken into account.</li>
@@ -127,16 +128,26 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 
 
 <h2>Workloads</h2>
-<p>The workload looks like </p>
+<p>Taking into account the init part, workloads look like:</p>
 <div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">testold</span><span class="p">(</span><span class="s1">&#39;{...}&#39;</span><span class="p">::</span><span class="n">json</span><span class="p">)::</span><span class="n">json</span><span class="p">;</span>
 </pre></div>
 
 
-<p>or</p>
+<p>and</p>
 <div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">testnew</span><span class="p">(</span><span class="s1">&#39;{...}&#39;</span><span class="p">::</span><span class="n">jsonb</span><span class="p">);</span>
 </pre></div>
 
 
+<p>Where {...} - is json which contains strings associated with it's int representation. For example:</p>
+<div class="highlight"><pre><span></span><span class="err">{</span>
+    <span class="ss">&quot;1&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+    <span class="ss">&quot;2&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">etc</span>
+<span class="err">}</span>
+</pre></div>
+
+
+<p><a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py">Here</a> you can find a python script I used to generate workloads. Important thing to note before running the script - you need to create a directory called "tests" inside the directory where gen_tests.py is located.</p>
 <h2>Results</h2>
 <script type="text/javascript">
      var data;
@@ -224,6 +235,8 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 <p><center>
 <div id="chart_div" style="width:90%; height:700"></div>
 </center></p>
+<p>On this chart, you can see how bad was my first approach (the "don't do that" section) in comparison with transform. The higher graph values go, the more miliseconds corresponding method worked.</p>
+<p>The "bad practise" is the first approach I've been talking about. As you can see, "transform" is a lot lower, which means that "transform" approach works a lot faster.</p>
     </div><!-- /.entry-content -->
 
   </article>

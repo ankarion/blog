@@ -39,7 +39,8 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 
 
 &lt;p&gt;The problem is that we have to define those two functions &lt;a href="https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L68"&gt;"name_of_function_from_sql"&lt;/a&gt; and &lt;a href="https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L101"&gt;"name_of_function_to_sql"&lt;/a&gt;. They describe the way the object will be transformed.&lt;/p&gt;
-&lt;p&gt;It is not always the easiest solution, but the good news is that these transforms are already implemented &lt;a href="https://github.com/postgrespro/jsonb_plpython"&gt;for python&lt;/a&gt; and &lt;a href="https://github.com/ankarion/jsonb_plperl"&gt;perl&lt;/a&gt; (feel free to check it out). So, the only thing you need to do is to install this extension:&lt;/p&gt;
+&lt;p&gt;It is not always the easiest solution, but the good news is that these transforms are already implemented &lt;a href="https://github.com/postgrespro/jsonb_plpython"&gt;for python&lt;/a&gt; and &lt;a href="https://github.com/ankarion/jsonb_plperl"&gt;perl&lt;/a&gt; (feel free to check it out and participate in patch discussions &lt;a href="https://www.postgresql.org/message-id/flat/20171024140129.6bd01f68@anthony-24-g082ur#20171024140129.6bd01f68@anthony-24-g082ur"&gt;perl&lt;/a&gt; and &lt;a href="https://www.postgresql.org/message-id/flat/20171025145100.3a19933f@anthony-24-g082ur/"&gt;python&lt;/a&gt;). &lt;/p&gt;
+&lt;p&gt;So, the only thing you need to do is to install an extension:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;create&lt;/span&gt; &lt;span class="n"&gt;extension&lt;/span&gt; &lt;span class="n"&gt;jsonb_plperl&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -49,7 +50,7 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;So, all your SQL code will look like this:&lt;/p&gt;
+&lt;p&gt;All your SQL code should look like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="n"&gt;EXTENSION&lt;/span&gt; &lt;span class="n"&gt;jsonb_plperl&lt;/span&gt; &lt;span class="k"&gt;CASCADE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
 &lt;span class="k"&gt;CREATE&lt;/span&gt; &lt;span class="k"&gt;FUNCTION&lt;/span&gt; &lt;span class="n"&gt;blah&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="n"&gt;jsonb&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;RETURNS&lt;/span&gt; &lt;span class="n"&gt;jsonb&lt;/span&gt;
@@ -64,7 +65,7 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 
 
 &lt;h1&gt;Benchmarks&lt;/h1&gt;
-&lt;p&gt;&lt;a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py"&gt;Here&lt;/a&gt; you can find a python script I used to generate tests.&lt;/p&gt;
+&lt;p&gt;This is the most spectacular part of this article. We are going to find out which method is better(faster) - the "Don't do this" or the "transform". &lt;/p&gt;
 &lt;p&gt;Benchmarking process is divided into two stages: &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;the init part, which is not going to be taken into account.&lt;/li&gt;
@@ -92,16 +93,26 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 
 
 &lt;h2&gt;Workloads&lt;/h2&gt;
-&lt;p&gt;The workload looks like &lt;/p&gt;
+&lt;p&gt;Taking into account the init part, workloads look like:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;select&lt;/span&gt; &lt;span class="n"&gt;testold&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;{...}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;)::&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;or&lt;/p&gt;
+&lt;p&gt;and&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;select&lt;/span&gt; &lt;span class="n"&gt;testnew&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;{...}&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;jsonb&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
+&lt;p&gt;Where {...} - is json which contains strings associated with it's int representation. For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;
+    &lt;span class="ss"&gt;&amp;quot;1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="ss"&gt;&amp;quot;2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;etc&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py"&gt;Here&lt;/a&gt; you can find a python script I used to generate workloads. Important thing to note before running the script - you need to create a directory called "tests" inside the directory where gen_tests.py is located.&lt;/p&gt;
 &lt;h2&gt;Results&lt;/h2&gt;
 &lt;script type="text/javascript"&gt;
      var data;
@@ -188,4 +199,6 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 
 &lt;p&gt;&lt;center&gt;
 &lt;div id="chart_div" style="width:90%; height:700"&gt;&lt;/div&gt;
-&lt;/center&gt;&lt;/p&gt;</content></entry></feed>
+&lt;/center&gt;&lt;/p&gt;
+&lt;p&gt;On this chart, you can see how bad was my first approach (the "don't do that" section) in comparison with transform. The higher graph values go, the more miliseconds corresponding method worked.&lt;/p&gt;
+&lt;p&gt;The "bad practise" is the first approach I've been talking about. As you can see, "transform" is a lot lower, which means that "transform" approach works a lot faster.&lt;/p&gt;</content></entry></feed>
