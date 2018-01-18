@@ -47,7 +47,9 @@ CREATE TRANSFORM FOR hstore LANGUAGE pl/perl (
 
 The problem is that we have to define those two functions ["name_of_function_from_sql"][hstore_plperl_from_sql] and ["name_of_function_to_sql"][hstore_plperl_to_sql]. They describe the way the object will be transformed.
 
-It is not always the easiest solution, but the good news is that these transforms are already implemented [for python][jsonb_plpython] and [perl][jsonb_plperl] (feel free to check it out). So, the only thing you need to do is to install this extension:
+It is not always the easiest solution, but the good news is that these transforms are already implemented [for python][jsonb_plpython] and [perl][jsonb_plperl] (feel free to check it out and participate in patch discussions [perl][commit_fest_pe] and [python][commit_fest_py]). 
+
+So, the only thing you need to do is to install an extension:
 
 ```sql
 create extension jsonb_plperl;
@@ -59,7 +61,7 @@ And in the definition of the function transform usage should be specified:
 TRANSFORM FOR TYPE jsonb
 ```
 
-So, all your SQL code will look like this:
+All your SQL code should look like this:
 
 ```sql
 CREATE EXTENSION jsonb_plperl CASCADE;
@@ -75,8 +77,7 @@ $$;
 ```
 
 # Benchmarks
-[Here][pyGen] you can find a python script I used to generate tests.
-
+This is the most spectacular part of this article. We are going to find out which method is better(faster) - the "Don't do this" or the "transform". 
 
 Benchmarking process is divided into two stages: 
 
@@ -106,15 +107,29 @@ $$;
 ```
 
 ## Workloads
-The workload looks like 
+Taking into account the init part, workloads look like:
 
 ```sql
 select testold('{...}'::json)::json;
 ```
-or
+
+and
+
 ```sql
 select testnew('{...}'::jsonb);
 ```
+
+Where {...} - is json which contains strings associated with it's int representation. For example:
+
+```sql
+{
+	"1":1,
+	"2":2,
+	etc
+}
+```
+
+[Here][pyGen] you can find a python script I used to generate workloads. Important thing to note before running the script - you need to create a directory called "tests" inside the directory where gen_tests.py is located.
 
 ## Results
 
@@ -205,11 +220,16 @@ select testnew('{...}'::jsonb);
 <div id="chart_div" style="width:90%; height:700"></div>
 </center>
 
+On this chart, you can see how bad was my first approach (the "don't do that" section) in comparison with transform. The higher graph values go, the more miliseconds corresponding method worked.
+
+The "bad practise" is the first approach I've been talking about. As you can see, "transform" is a lot lower, which means that "transform" approach works a lot faster.
 
 [//]: <> (src)
 [pyGen]: https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py
 [jsonb_plpython]: https://github.com/postgrespro/jsonb_plpython
 [jsonb_plperl]: https://github.com/ankarion/jsonb_plperl
+[commit_fest_pe]: https://www.postgresql.org/message-id/flat/20171024140129.6bd01f68@anthony-24-g082ur#20171024140129.6bd01f68@anthony-24-g082ur
+[commit_fest_py]: https://www.postgresql.org/message-id/flat/20171025145100.3a19933f@anthony-24-g082ur/
 [hstore_plperl_to_sql]: https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L101
 [hstore_plperl_from_sql]: https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L68
 
