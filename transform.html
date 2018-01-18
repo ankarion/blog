@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Blog of Ankarion</title>
+        <title>Transform</title>
         <link rel="stylesheet" href="https://ankarion.github.io/blog/theme/css/main.css" />
         <link href="https://ankarion.github.io/blog/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog of Ankarion Atom Feed" />
 
@@ -15,13 +15,18 @@
         <header id="banner" class="body">
                 <h1><a href="https://ankarion.github.io/blog/">Blog of Ankarion </a></h1>
                 <nav><ul>
-                    <li><a href="https://ankarion.github.io/blog/category/postgresql.html">PostgreSQL</a></li>
+                    <li class="active"><a href="https://ankarion.github.io/blog/category/postgresql.html">PostgreSQL</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="https://ankarion.github.io/blog/transform.html" rel="bookmark"
+           title="Permalink to Transform">Transform</a></h1>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="https://ankarion.github.io/blog/transform.html">Transform</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-12-20T12:20:00+01:00">
                 Published: Wed 20 December 2017
@@ -32,7 +37,7 @@
         </address>
 <p>In <a href="https://ankarion.github.io/blog/category/postgresql.html">PostgreSQL</a>.</p>
 
-</footer><!-- /.post-info --><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</footer><!-- /.post-info -->      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <p>Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just <a href="http://lmgtfy.com/?q=jsonb+postgresql">googling it</a>. (even I have <a href="https://ankarion.github.io/blog/jsonb.html">one</a> in drafts) But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside <a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html">triggers</a>.</p>
 <p>After googling for a few seconds I found out that it is easier to write my own way of working with jsonb.</p>
@@ -218,8 +223,11 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 
 <p><center>
 <div id="chart_div" style="width:90%; height:700"></div>
-</center></p>                </article>
-            </aside><!-- /#featured -->
+</center></p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>links</h2>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Transform</title>
+        <title>Blog of Ankarion - PostgreSQL</title>
         <link rel="stylesheet" href="https://ankarion.github.io/blog/theme/css/main.css" />
         <link href="https://ankarion.github.io/blog/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog of Ankarion Atom Feed" />
 
@@ -15,17 +15,13 @@
         <header id="banner" class="body">
                 <h1><a href="https://ankarion.github.io/blog/">Blog of Ankarion </a></h1>
                 <nav><ul>
+                    <li class="active"><a href="https://ankarion.github.io/blog/category/postgresql.html">PostgreSQL</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
-<section id="content" class="body">
-  <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="https://ankarion.github.io/blog/drafts/transform.html" rel="bookmark"
-           title="Permalink to Transform">Transform</a></h1>
-    </header>
 
-    <div class="entry-content">
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="https://ankarion.github.io/blog/transform.html">Transform</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2017-12-20T12:20:00+01:00">
                 Published: Wed 20 December 2017
@@ -36,21 +32,31 @@
         </address>
 <p>In <a href="https://ankarion.github.io/blog/category/postgresql.html">PostgreSQL</a>.</p>
 
-</footer><!-- /.post-info -->      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</footer><!-- /.post-info --><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <p>Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just <a href="http://lmgtfy.com/?q=jsonb+postgresql">googling it</a>. (even I have <a href="https://ankarion.github.io/blog/jsonb.html">one</a> in drafts) But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside <a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html">triggers</a>.</p>
 <p>After googling for a few seconds I found out that it is easier to write my own way of working with jsonb.</p>
+<style>
+   details > div {
+     margin-left: 1.3em;
+     background-color: rgba(0, 0, 0, 0.1);
+   }
+</style>
+
 <p><details>
     <summary>
         <b>Don't do this</b>
     </summary>
+    <div>
+    <hr>
     I've decided to use json as the incoming parameter (which in perl is $<em>[0]) and inside the function parse it into the desired object.
     <pre>
 <code>use JSON;
 my $hash = decode_json($</em>[0]);</code></pre>
     I assumed that this is not the best solution because PostgreSQL 9.5+ provides <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">"create transform"</a> which is supposed to work faster.
+    <hr>
+    </div>
 </details></p>
-<h1>Intro</h1>
 <p>This article is dedicated to <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">transforms</a>. I will show what it is and how to use it on some simple examples, in the end of this article there is a "benchmark" section which will compare <strong>jsonb + transform</strong> vs <strong>json + decode_hash</strong> (which was described in "don't do..." part)</p>
 <h1>Definition</h1>
 <p><a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">Transforms</a> are supposed to define the way PostgreSQL object can be represented in certain language. 
@@ -94,6 +100,7 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 <li>the init part, which is not going to be taken into account.</li>
 <li>the workload part, which is going to be evaluated.</li>
 </ul>
+<h2>Init</h2>
 <p>In "init" part, we initialize the functions which transforms objects into perl and then parses it back to plpgsql language:</p>
 <div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="n">EXTENSION</span> <span class="n">jsonb_plperlu</span> <span class="k">CASCADE</span><span class="p">;</span>
 
@@ -114,16 +121,18 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 </pre></div>
 
 
+<h2>Workloads</h2>
 <p>The workload looks like </p>
-<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">testold</span><span class="p">(</span><span class="s1">&#39;{}&#39;</span><span class="p">::</span><span class="n">json</span><span class="p">)::</span><span class="n">json</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">testold</span><span class="p">(</span><span class="s1">&#39;{...}&#39;</span><span class="p">::</span><span class="n">json</span><span class="p">)::</span><span class="n">json</span><span class="p">;</span>
 </pre></div>
 
 
 <p>or</p>
-<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">testnew</span><span class="p">(</span><span class="s1">&#39;{}&#39;</span><span class="p">::</span><span class="n">jsonb</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">testnew</span><span class="p">(</span><span class="s1">&#39;{...}&#39;</span><span class="p">::</span><span class="n">jsonb</span><span class="p">);</span>
 </pre></div>
 
 
+<h2>Results</h2>
 <script type="text/javascript">
      var data;
      var chart;
@@ -209,11 +218,8 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 
 <p><center>
 <div id="chart_div" style="width:90%; height:700"></div>
-</center></p>
-    </div><!-- /.entry-content -->
-
-  </article>
-</section>
+</center></p>                </article>
+            </aside><!-- /#featured -->
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>links</h2>
