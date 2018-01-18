@@ -1,28 +1,37 @@
 Title: Transform
 Date: 2017-12-20 12:20
 Category: PostgreSQL
-Status: draft
+Status: published
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-[//]: <> (# Jsonb outline:- definition- usage- benchmarks- future work)
 
 Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just [googling it][jsonbLMGTFY]. (even I have [one][jsonbArt] in drafts) But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside [triggers][triggers].
 
 After googling for a few seconds I found out that it is easier to write my own way of working with jsonb.
 
+<style>
+   details > div {
+     margin-left: 1.3em;
+     background-color: rgba(0, 0, 0, 0.1);
+   }
+</style>
+
 <details>
 	<summary>
 		<b>Don't do this</b>
 	</summary>
+	<div>
+	<hr>
 	I've decided to use json as the incoming parameter (which in perl is $_[0]) and inside the function parse it into the desired object.
 	<pre>
 <code>use JSON;
 my $hash = decode_json($_[0]);</code></pre>
 	I assumed that this is not the best solution because PostgreSQL 9.5+ provides ["create transform"][transform] which is supposed to work faster.
+	<hr>
+	</div>
 </details>
 
-# Intro
+
 This article is dedicated to [transforms][transform]. I will show what it is and how to use it on some simple examples, in the end of this article there is a "benchmark" section which will compare **jsonb + transform** vs **json + decode_hash** (which was described in "don't do..." part)
 
 # Definition
@@ -74,6 +83,7 @@ Benchmarking process is divided into two stages:
 - the init part, which is not going to be taken into account.
 - the workload part, which is going to be evaluated.
 
+## Init
 In "init" part, we initialize the functions which transforms objects into perl and then parses it back to plpgsql language:
 
 ```sql
@@ -95,15 +105,18 @@ return encode_json $hash;
 $$;
 ```
 
+## Workloads
 The workload looks like 
 
 ```sql
-select testold('{}'::json)::json;
+select testold('{...}'::json)::json;
 ```
 or
 ```sql
-select testnew('{}'::jsonb);
+select testnew('{...}'::jsonb);
 ```
+
+## Results
 
 <script type="text/javascript">
      var data;
