@@ -5,22 +5,23 @@ Status: published
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just [googling it][jsonbLMGTFY]. (even I have [one][jsonbArt] in drafts) But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside [triggers][triggers].
+# Preface
+Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just [googling it][jsonbLMGTFY](even I have one in drafts). But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside [triggers][triggers].
 
-After googling for a few seconds I found out that it is easier to write my own way of working with jsonb.
-<div>
-<hr>
-<b>My own way of working with jsonb</b>
-<p>I've decided to use json as the incoming parameter (which in perl is $_[0]) and inside the function parse it into the desired object.
-	<pre>
-<code>use JSON;
-my $hash = decode_json($_[0]);</code></pre>
-I assumed that this is not the best solution because PostgreSQL 9.5+ provides ["create transform"][transform] which is supposed to work faster.
-<hr>
-</div>
+After googling for a few seconds I thought "Meh, I've tried. Maybe it is easier to write my own way of working with jsonb."
 
+## My own way of working with jsonb
+And I'm happy to introduce you the "My own way of working with jsonb". The idea is to take json as the incoming parameter(which in perl is $_[0]) and inside the function parse it into the desired object. TA-dah!
 
-This article is dedicated to [transforms][transform]. I will show what it is and how to use it on some simple examples, in the end of this article there is a "benchmark" section which will compare **jsonb + transform** vs **json + decode_hash** (which was described in "don't do..." part)
+```perl
+use JSON;
+my $hash = decode_json($_[0]);
+```
+
+Well... In the end, it became obvious that this is not the best solution because PostgreSQL 9.5+ provides ["create transform"][transform] functionality which is supposed to work better.
+
+# Intro
+This article is dedicated to [transforms][transform] and designed in order to save you from some possible mistakes. I will show what "transform" is and how to use it on some simple artificial examples, at the end of this article there is a "benchmark" section which will compare **jsonb + transform** vs **json + decode_hash** (which was described in "don't do..." part)
 
 # Definition
 [Transforms][transform] are supposed to define the way PostgreSQL object can be represented in certain language. 
