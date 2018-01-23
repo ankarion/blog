@@ -34,19 +34,19 @@
 
 </footer><!-- /.post-info --><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-<p>Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just <a href="http://lmgtfy.com/?q=jsonb+postgresql">googling it</a>. (even I have <a href="https://ankarion.github.io/blog/jsonb.html">one</a> in drafts) But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside <a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html">triggers</a>.</p>
-<p>After googling for a few seconds I found out that it is easier to write my own way of working with jsonb.
-<div>
-<hr>
-<b>My own way of working with jsonb</b>
-<p>I've decided to use json as the incoming parameter (which in perl is $<em>[0]) and inside the function parse it into the desired object.
-    <pre>
-<code>use JSON;
-my $hash = decode_json($</em>[0]);</code></pre>
-I assumed that this is not the best solution because PostgreSQL 9.5+ provides <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">"create transform"</a> which is supposed to work faster.
-<hr>
-</div></p>
-<p>This article is dedicated to <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">transforms</a>. I will show what it is and how to use it on some simple examples, in the end of this article there is a "benchmark" section which will compare <strong>jsonb + transform</strong> vs <strong>json + decode_hash</strong> (which was described in "don't do..." part)</p>
+<h1>Preface</h1>
+<p>Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just <a href="http://lmgtfy.com/?q=jsonb+postgresql">googling it</a>(even I have one in drafts). But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside <a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html">triggers</a>.</p>
+<p>After googling for a few seconds I thought "Meh, I've tried. Maybe it is easier to write my own way of working with jsonb."</p>
+<h2>My own way of working with jsonb</h2>
+<p>And I'm happy to introduce you the "My own way of working with jsonb". The idea is to take json as the incoming parameter(which in perl is $_[0]) and inside the function parse it into the desired object. TA-dah!</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">JSON</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">$hash</span> <span class="o">=</span> <span class="n">decode_json</span><span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</pre></div>
+
+
+<p>Well... In the end, it became obvious that this is not the best solution because PostgreSQL 9.5+ provides <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">"create transform"</a> functionality which is supposed to work better.</p>
+<h1>Intro</h1>
+<p>This article is dedicated to <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">transforms</a> and designed in order to save you from some possible mistakes. I will show what "transform" is and how to use it on some simple artificial examples, at the end of this article there is a "benchmark" section which will compare <strong>jsonb + transform</strong> vs <strong>json + decode_hash</strong> (which was described in "don't do..." part)</p>
 <h1>Definition</h1>
 <p><a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">Transforms</a> are supposed to define the way PostgreSQL object can be represented in certain language. 
 For example, we want to represent PostgreSQL type "hstore" as a perl type. This can be done through 4 lines of SQL code:</p>

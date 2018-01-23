@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Blog of Ankarion - PostgreSQL</title><link href="https://ankarion.github.io/blog/" rel="alternate"></link><link href="https://ankarion.github.io/blog/feeds/postgresql.atom.xml" rel="self"></link><id>https://ankarion.github.io/blog/</id><updated>2017-12-20T12:20:00+01:00</updated><entry><title>Transform</title><link href="https://ankarion.github.io/blog/transform.html" rel="alternate"></link><published>2017-12-20T12:20:00+01:00</published><updated>2017-12-20T12:20:00+01:00</updated><author><name>Bykov Anthony</name></author><id>tag:ankarion.github.io,2017-12-20:/blog/transform.html</id><summary type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
 
-&lt;p&gt;Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just &lt;a href="http://lmgtfy.com/?q=jsonb+postgresql"&gt;googling it&lt;/a&gt;. (even I have &lt;a href="https://ankarion.github.io/blog/jsonb.html"&gt;one&lt;/a&gt; in drafts) But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside &lt;a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html"&gt;triggers&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;After googling for …&lt;/p&gt;</summary><content type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
+&lt;h1&gt;Preface&lt;/h1&gt;
+&lt;p&gt;Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just &lt;a href="http://lmgtfy.com/?q=jsonb+postgresql"&gt;googling it&lt;/a&gt;(even I have one in drafts). But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside &lt;a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html"&gt;triggers&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;After googling …&lt;/p&gt;</summary><content type="html">&lt;script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"&gt;&lt;/script&gt;
 
-&lt;p&gt;Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just &lt;a href="http://lmgtfy.com/?q=jsonb+postgresql"&gt;googling it&lt;/a&gt;. (even I have &lt;a href="https://ankarion.github.io/blog/jsonb.html"&gt;one&lt;/a&gt; in drafts) But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside &lt;a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html"&gt;triggers&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;After googling for a few seconds I found out that it is easier to write my own way of working with jsonb.
-&lt;div&gt;
-&lt;hr&gt;
-&lt;b&gt;My own way of working with jsonb&lt;/b&gt;
-&lt;p&gt;I've decided to use json as the incoming parameter (which in perl is $&lt;em&gt;[0]) and inside the function parse it into the desired object.
-    &lt;pre&gt;
-&lt;code&gt;use JSON;
-my $hash = decode_json($&lt;/em&gt;[0]);&lt;/code&gt;&lt;/pre&gt;
-I assumed that this is not the best solution because PostgreSQL 9.5+ provides &lt;a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html"&gt;"create transform"&lt;/a&gt; which is supposed to work faster.
-&lt;hr&gt;
-&lt;/div&gt;&lt;/p&gt;
-&lt;p&gt;This article is dedicated to &lt;a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html"&gt;transforms&lt;/a&gt;. I will show what it is and how to use it on some simple examples, in the end of this article there is a "benchmark" section which will compare &lt;strong&gt;jsonb + transform&lt;/strong&gt; vs &lt;strong&gt;json + decode_hash&lt;/strong&gt; (which was described in "don't do..." part)&lt;/p&gt;
+&lt;h1&gt;Preface&lt;/h1&gt;
+&lt;p&gt;Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just &lt;a href="http://lmgtfy.com/?q=jsonb+postgresql"&gt;googling it&lt;/a&gt;(even I have one in drafts). But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside &lt;a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html"&gt;triggers&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;After googling for a few seconds I thought "Meh, I've tried. Maybe it is easier to write my own way of working with jsonb."&lt;/p&gt;
+&lt;h2&gt;My own way of working with jsonb&lt;/h2&gt;
+&lt;p&gt;And I'm happy to introduce you the "My own way of working with jsonb". The idea is to take json as the incoming parameter(which in perl is $_[0]) and inside the function parse it into the desired object. TA-dah!&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;JSON&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;decode_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$_&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Well... In the end, it became obvious that this is not the best solution because PostgreSQL 9.5+ provides &lt;a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html"&gt;"create transform"&lt;/a&gt; functionality which is supposed to work better.&lt;/p&gt;
+&lt;h1&gt;Intro&lt;/h1&gt;
+&lt;p&gt;This article is dedicated to &lt;a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html"&gt;transforms&lt;/a&gt; and designed in order to save you from some possible mistakes. I will show what "transform" is and how to use it on some simple artificial examples, at the end of this article there is a "benchmark" section which will compare &lt;strong&gt;jsonb + transform&lt;/strong&gt; vs &lt;strong&gt;json + decode_hash&lt;/strong&gt; (which was described in "don't do..." part)&lt;/p&gt;
 &lt;h1&gt;Definition&lt;/h1&gt;
 &lt;p&gt;&lt;a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html"&gt;Transforms&lt;/a&gt; are supposed to define the way PostgreSQL object can be represented in certain language. 
 For example, we want to represent PostgreSQL type "hstore" as a perl type. This can be done through 4 lines of SQL code:&lt;/p&gt;
