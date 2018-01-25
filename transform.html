@@ -227,6 +227,21 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 <p>On this chart, you can see how bad was my first approach (the "don't do that" section) in comparison with transform. The higher graph values go, the more milliseconds corresponding method worked.</p>
 <p>The "bad practice" is the first approach I've been talking about. As you can see, "transform" grows slower, which means that "transform" approach works a lot faster. This is the reason why I called "bad practice" bad.</p>
     </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'ankarion-blog';
+        var disqus_identifier = 'transform.html';
+        var disqus_url = 'https://ankarion.github.io/blog/transform.html';
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//ankarion-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
 
   </article>
 </section>
@@ -260,5 +275,14 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
                 <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
 
+<script type="text/javascript">
+    var disqus_shortname = 'ankarion-blog';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
 </body>
 </html>
