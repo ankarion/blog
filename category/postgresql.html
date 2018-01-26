@@ -38,7 +38,7 @@
 <p>Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just <a href="http://lmgtfy.com/?q=jsonb+postgresql">googling it</a>(even I have one in drafts). But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside <a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html">triggers</a>.</p>
 <p>After googling for a few seconds I thought "Meh, I've tried. Maybe it is easier to write my own way of working with jsonb."</p>
 <h2>My own way of working with jsonb</h2>
-<p>And I'm happy to introduce you the "My own way of working with jsonb". The idea is to take json as the incoming parameter(which in perl is $_[0]) and inside the function parse it into the desired object. TA-dah!</p>
+<p>So, I'm happy to introduce you the "My own way of working with jsonb". The idea is to take a json as the incoming parameter(which in perl is $_[0]) and inside the function parse it into the desired object. TA-dah!</p>
 <div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">JSON</span><span class="p">;</span>
 <span class="k">my</span> <span class="nv">$hash</span> <span class="o">=</span> <span class="n">decode_json</span><span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
 </pre></div>
@@ -46,7 +46,7 @@
 
 <p>Well... In the end, it became obvious that this is not the best solution because PostgreSQL 9.5+ provides <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">"create transform"</a> functionality which is supposed to work better.</p>
 <h1>Intro</h1>
-<p>This article is dedicated to <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">transforms</a> and designed in order to save you from some possible mistakes. I will show what "transform" is and how to use it on some simple artificial examples, at the end of this article there is a "benchmark" section which will compare <strong>jsonb + transform</strong> vs <strong>json + decode_hash</strong> (which was described in "don't do..." part)</p>
+<p>This article is dedicated to <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">transforms</a> and designed in order to save you from some possible mistakes. I will show what "transform" is and how to use it on a simple artificial example, at the end of this article there is a "benchmark" section which will compare <strong>jsonb + transform</strong> vs <strong>json + decode_hash</strong> (which was described in "Preface" part)</p>
 <h1>Definition</h1>
 <p><a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">Transforms</a> are supposed to define the way PostgreSQL object can be represented in certain language. 
 For example, we want to represent PostgreSQL type "hstore" as a perl type. This can be done through 4 lines of SQL code:</p>
@@ -58,18 +58,18 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 
 
 <p>The problem is that we have to define those two functions <a href="https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L68">"name_of_function_from_sql"</a> and <a href="https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L101">"name_of_function_to_sql"</a>. They describe the way the object will be transformed.</p>
-<p>It is not always the easiest solution, but the good news is that these transforms are already implemented <a href="https://github.com/postgrespro/jsonb_plpython">for python</a> and <a href="https://github.com/ankarion/jsonb_plperl">perl</a> (feel free to check it out and participate in patch discussions <a href="https://www.postgresql.org/message-id/flat/20171024140129.6bd01f68@anthony-24-g082ur#20171024140129.6bd01f68@anthony-24-g082ur">perl</a> and <a href="https://www.postgresql.org/message-id/flat/20171025145100.3a19933f@anthony-24-g082ur/">python</a>). </p>
+<p>It is not always the easiest solution, but the good news is that some transforms are already implemented. Jsonb can be transformed <a href="https://github.com/postgrespro/jsonb_plpython">into python</a> and <a href="https://github.com/ankarion/jsonb_plperl">into perl</a> (feel free to check it out and participate in <a href="https://www.postgresql.org/message-id/flat/20171024140129.6bd01f68@anthony-24-g082ur#20171024140129.6bd01f68@anthony-24-g082ur">perl</a> and <a href="https://www.postgresql.org/message-id/flat/20171025145100.3a19933f@anthony-24-g082ur/">python</a> patch discussions). </p>
 <p>So, the only thing you need to do is to install an extension:</p>
 <div class="highlight"><pre><span></span><span class="k">create</span> <span class="n">extension</span> <span class="n">jsonb_plperl</span><span class="p">;</span>
 </pre></div>
 
 
-<p>And in the definition of the function transform usage should be specified:</p>
+<p>And show that transform should be used in the definition of the function:</p>
 <div class="highlight"><pre><span></span><span class="k">TRANSFORM</span> <span class="k">FOR</span> <span class="k">TYPE</span> <span class="n">jsonb</span>
 </pre></div>
 
 
-<p>All your SQL code should look like this:</p>
+<p>Full SQL code should look like this:</p>
 <div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="n">EXTENSION</span> <span class="n">jsonb_plperl</span> <span class="k">CASCADE</span><span class="p">;</span>
 
 <span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">blah</span><span class="p">(</span><span class="n">val</span> <span class="n">jsonb</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">jsonb</span>
@@ -84,11 +84,11 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 
 
 <h1>Benchmarks</h1>
-<p>This is the most spectacular part of this article. We are going to find out which method is better(faster) - the "Don't do this" or the "transform". </p>
+<p>This is the most spectacular part of this article. We are going to find out which method is better(faster) - the old one or the "transform". </p>
 <p>Benchmarking process is divided into two stages: </p>
 <ul>
-<li>the init part, which is not going to be taken into account.</li>
-<li>the workload part, which is going to be evaluated.</li>
+<li>the init part</li>
+<li>the workload part</li>
 </ul>
 <h2>Init</h2>
 <p>In "init" part, we initialize the functions which transforms objects into perl and then parses it back to plpgsql language:</p>
@@ -219,7 +219,7 @@ For example, we want to represent PostgreSQL type "hstore" as a perl type. This 
 <p><center>
 <div id="chart_div" style="width:90%; height:700"></div>
 </center></p>
-<p>On this chart, you can see how bad was my first approach (the "don't do that" section) in comparison with transform. The higher graph values go, the more milliseconds corresponding method worked.</p>
+<p>On this chart, you can see how bad was my first approach in comparison with transform. The higher graph values go, the more milliseconds corresponding method worked.</p>
 <p>The "bad practice" is the first approach I've been talking about. As you can see, "transform" grows slower, which means that "transform" approach works a lot faster. This is the reason why I called "bad practice" bad.</p><p>There are <a href="https://ankarion.github.io/blog/transform.html#disqus_thread">comments</a>.</p>                </article>
             </aside><!-- /#featured -->
         <section id="extras" class="body">
