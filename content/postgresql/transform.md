@@ -11,7 +11,7 @@ Jsonb is not a new feature in PostgreSQL and you can easily find some articles b
 After googling for a few seconds I thought "Meh, I've tried. Maybe it is easier to write my own way of working with jsonb."
 
 ## My own way of working with jsonb
-And I'm happy to introduce you the "My own way of working with jsonb". The idea is to take json as the incoming parameter(which in perl is $_[0]) and inside the function parse it into the desired object. TA-dah!
+So, I'm happy to introduce you the "My own way of working with jsonb". The idea is to take a json as the incoming parameter(which in perl is $_[0]) and inside the function parse it into the desired object. TA-dah!
 
 ```perl
 use JSON;
@@ -21,7 +21,7 @@ my $hash = decode_json($_[0]);
 Well... In the end, it became obvious that this is not the best solution because PostgreSQL 9.5+ provides ["create transform"][transform] functionality which is supposed to work better.
 
 # Intro
-This article is dedicated to [transforms][transform] and designed in order to save you from some possible mistakes. I will show what "transform" is and how to use it on some simple artificial examples, at the end of this article there is a "benchmark" section which will compare **jsonb + transform** vs **json + decode_hash** (which was described in "don't do..." part)
+This article is dedicated to [transforms][transform] and designed in order to save you from some possible mistakes. I will show what "transform" is and how to use it on a simple artificial example, at the end of this article there is a "benchmark" section which will compare **jsonb + transform** vs **json + decode_hash** (which was described in "Preface" part)
 
 # Definition
 [Transforms][transform] are supposed to define the way PostgreSQL object can be represented in certain language. 
@@ -36,7 +36,7 @@ CREATE TRANSFORM FOR hstore LANGUAGE pl/perl (
 
 The problem is that we have to define those two functions ["name_of_function_from_sql"][hstore_plperl_from_sql] and ["name_of_function_to_sql"][hstore_plperl_to_sql]. They describe the way the object will be transformed.
 
-It is not always the easiest solution, but the good news is that these transforms are already implemented [for python][jsonb_plpython] and [perl][jsonb_plperl] (feel free to check it out and participate in patch discussions [perl][commit_fest_pe] and [python][commit_fest_py]). 
+It is not always the easiest solution, but the good news is that some transforms are already implemented. Jsonb can be transformed [into python][jsonb_plpython] and [into perl][jsonb_plperl] (feel free to check it out and participate in [perl][commit_fest_pe] and [python][commit_fest_py] patch discussions). 
 
 So, the only thing you need to do is to install an extension:
 
@@ -44,13 +44,13 @@ So, the only thing you need to do is to install an extension:
 create extension jsonb_plperl;
 ```
 
-And in the definition of the function transform usage should be specified:
+And show that transform should be used in the definition of the function:
 
 ```sql
 TRANSFORM FOR TYPE jsonb
 ```
 
-All your SQL code should look like this:
+Full SQL code should look like this:
 
 ```sql
 CREATE EXTENSION jsonb_plperl CASCADE;
@@ -66,12 +66,12 @@ $$;
 ```
 
 # Benchmarks
-This is the most spectacular part of this article. We are going to find out which method is better(faster) - the "Don't do this" or the "transform". 
+This is the most spectacular part of this article. We are going to find out which method is better(faster) - the old one or the "transform". 
 
 Benchmarking process is divided into two stages: 
 
-- the init part, which is not going to be taken into account.
-- the workload part, which is going to be evaluated.
+- the init part
+- the workload part
 
 ## Init
 In "init" part, we initialize the functions which transforms objects into perl and then parses it back to plpgsql language:
@@ -209,11 +209,11 @@ Where {...} - is json which contains strings associated with it's int representa
 <div id="chart_div" style="width:90%; height:700"></div>
 </center>
 
-On this chart, you can see how bad was my first approach (the "don't do that" section) in comparison with transform. The higher graph values go, the more milliseconds corresponding method worked.
+On this chart, you can see how bad was my first approach in comparison with transform. The higher graph values go, the more milliseconds corresponding method worked.
 
 The "bad practice" is the first approach I've been talking about. As you can see, "transform" grows slower, which means that "transform" approach works a lot faster. This is the reason why I called "bad practice" bad.
 
-[//]: <> (src)
+[//]: <> (sources)
 [pyGen]: https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py
 [jsonb_plpython]: https://github.com/postgrespro/jsonb_plpython
 [jsonb_plperl]: https://github.com/ankarion/jsonb_plperl
@@ -222,7 +222,7 @@ The "bad practice" is the first approach I've been talking about. As you can see
 [hstore_plperl_to_sql]: https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L101
 [hstore_plperl_from_sql]: https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L68
 
-[//]: <> (img)
+[//]: <> (images)
 
 
 [//]: <> (articles)
