@@ -6,7 +6,7 @@ Category: PostgreSQL
 
 [//]: <> (# Jsonb outline:- definition- usage- benchmarks- future work)
 
-In this article, I want to introduce you a type "jsonb". It is not new, but it is frequently used tool in PostgreSQL.
+In this article, I want to introduce you a type "jsonb". It is not new, but it is frequently used type in PostgreSQL.
 
 # Definition
 At first glance, jsonb looks like a usual json except for some differences in guts:
@@ -22,7 +22,6 @@ At first glance, jsonb looks like a usual json except for some differences in gu
         data.addColumn('string', 'Json');
         data.addColumn('string', 'Jsonb');
         
-        // TODO: find out how to show spaces!!!
         data.addRows([
           ['unique keys', 'select \'{"0":0, "1":1, "0":2}\'::json;','{"0":0, "1":1, "0":2}', '{"1":1, "0":2}'],
           ['no identation',  'select \'{"0":0, "1":1,&nbsp;&nbsp;&nbsp;&nbsp;"0":2}\'::json;',  '{"0":0, "1":1, &nbsp;&nbsp;&nbsp;&nbsp;"0":2}', '{"1":1, "0":2}']
@@ -157,13 +156,14 @@ The first idea is to return data back to [3NF][3NF] in order to reduce sizes of 
       }
 </script>
 
-<center><div id="entities"></div></center>
-<table>
+<center><div id="entities">
+<table width=80%>
 <tr>
 <td><b>users:</b><div id="normalization_table_1"></div></td>
+<td></td>
 <td><b>kids:</b><div id="normalization_table_2"></div></td>
 </tr>
-</table>
+</table></div></center>
 
 As you can see in the example, Mike has a wife(Alice) and they have only one kid with salary $15,000, but they have 2 more kids from other marriage.
 
