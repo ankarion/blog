@@ -1,45 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-        <meta charset="utf-8" />
-        <title>Jsonb</title>
-        <link rel="stylesheet" href="https://ankarion.github.io/blog/theme/css/main.css" />
-        <link href="https://ankarion.github.io/blog/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog of Ankarion Atom Feed" />
 
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Jsonb | Blog of Ankarion
+</title>
+  <link rel="canonical" href="https://ankarion.github.io/blog/drafts/jsonb.html">
+
+    <link rel="apple-touch-icon" href="https://ankarion.github.io/blog/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="https://ankarion.github.io/blog/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://ankarion.github.io/blog/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="https://ankarion.github.io/blog/manifest.json">
+    <meta name="theme-color" content="#333333">
+
+  <link rel="stylesheet" href="https://ankarion.github.io/blog/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://ankarion.github.io/blog/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://ankarion.github.io/blog/theme/css/pygments/monokai.min.css">
+  <link rel="stylesheet" href="https://ankarion.github.io/blog/theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="https://ankarion.github.io/blog/feeds/all.atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Categories Atom Feed"
+        href="https://ankarion.github.io/blog/feeds/{'slug': u'postgresql'}.atom.xml">  
+  <meta name="description" content="In this article, I want to introduce you a type "jsonb". It is not new, but it is frequently used type in PostgreSQL. Definition At first glance, jsonb looks like a usual json except for some differences in guts: google.charts.load('current', {'packages':['table']}); google.charts.setOnLoadCallback(drawTable); function …">
+
+
 </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="https://ankarion.github.io/blog/">Blog of Ankarion </a></h1>
-                <nav><ul>
-                    <li class="active"><a href="https://ankarion.github.io/blog/category/postgresql.html">PostgreSQL</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
-  <article>
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="https://ankarion.github.io/blog/">
+        <img class="img-fluid rounded" src=https://ankarion.github.io/blog/images/profile.jpg width=200 height=200 alt="Blog of Ankarion">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="https://ankarion.github.io/blog/">Blog of Ankarion</a></h1>
+      <p class="text-muted">A blog about applied SQL/C/C++</p>
+      <ul class="list-inline">
+          <li class="list-inline-item"><a href="https://github.com/ankarion" target="_blank">Github</a></li>
+          <li class="list-inline-item"><a href="https://t.me/Ankarion" target="_blank">Telegram</a></li>
+          <li class="list-inline-item"><a href="http://python.org/" target="_blank">Python.org</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/ankarion" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>  Jsonb
+</h1>
+      <hr>
+  <article class="article">
     <header>
-      <h1 class="entry-title">
-        <a href="https://ankarion.github.io/blog/drafts/jsonb.html" rel="bookmark"
-           title="Permalink to Jsonb">Jsonb</a></h1>
+      <ul class="list-inline">
+        <li class="list-inline-item text-muted" title="2017-12-14T12:20:00+03:00">
+          <i class="fa fa-clock-o"></i>
+          Thu 14 December 2017
+        </li>
+        <li class="list-inline-item">
+          <i class="fa fa-folder-open-o"></i>
+          <a href="https://ankarion.github.io/blog/category/postgresql.html">PostgreSQL</a>
+        </li>
+          <li class="list-inline-item">
+            <i class="fa fa-user-o"></i>
+              <a href="https://ankarion.github.io/blog/author/bykov-anthony.html">Bykov Anthony</a>          </li>
+      </ul>
     </header>
+    <div class="content">
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2017-12-14T12:20:00+01:00">
-                Published: Thu 14 December 2017
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="https://ankarion.github.io/blog/author/bykov-anthony.html">Bykov Anthony</a>
-        </address>
-<p>In <a href="https://ankarion.github.io/blog/category/postgresql.html">PostgreSQL</a>.</p>
-
-</footer><!-- /.post-info -->      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-<p>In this article, I want to introduce you a type "jsonb". It is not new, but it is frequently used tool in PostgreSQL.</p>
+<p>In this article, I want to introduce you a type "jsonb". It is not new, but it is frequently used type in PostgreSQL.</p>
 <h1>Definition</h1>
 <p>At first glance, jsonb looks like a usual json except for some differences in guts:</p>
 <script type="text/javascript">
@@ -53,7 +91,6 @@
         data.addColumn('string', 'Json');
         data.addColumn('string', 'Jsonb');
 
-        // TODO: find out how to show spaces!!!
         data.addRows([
           ['unique keys', 'select \'{"0":0, "1":1, "0":2}\'::json;','{"0":0, "1":1, "0":2}', '{"1":1, "0":2}'],
           ['no identation',  'select \'{"0":0, "1":1,&nbsp;&nbsp;&nbsp;&nbsp;"0":2}\'::json;',  '{"0":0, "1":1, &nbsp;&nbsp;&nbsp;&nbsp;"0":2}', '{"1":1, "0":2}']
@@ -182,13 +219,14 @@
       }
 </script>
 
-<p><center><div id="entities"></div></center>
-<table>
+<p><center><div id="entities">
+<table width=80%>
 <tr>
 <td><b>users:</b><div id="normalization_table_1"></div></td>
+<td></td>
 <td><b>kids:</b><div id="normalization_table_2"></div></td>
 </tr>
-</table></p>
+</table></div></center></p>
 <p>As you can see in the example, Mike has a wife(Alice) and they have only one kid with salary $15,000, but they have 2 more kids from other marriage.</p>
 <!-- TODO: add more tables -->
 
@@ -220,48 +258,43 @@
 <div id="usage_table_4"></div>
 
 <p>So, we have 5 by 4 table now.</p>
-    </div><!-- /.entry-content -->
-
+    </div>
   </article>
-</section>
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="#">You can modify those links in your config file</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-                            <li><a href="https://ankarion.github.io/blog/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+  <hr>
+  <div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function() {
+      this.page.url = 'https://ankarion.github.io/blog/drafts/jsonb.html';
+      this.page.identifier = 'jsonb';
+    };
+    (function() {
+      var d = document;
+      var s = d.createElement('script');
+      s.src = '//ankarion-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript class="text-muted">
+    Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+  </noscript>
+    </div>
+  </div>
 
-                            <li><a href="https://github.com/ankarion">Github</a></li>
-                            <li><a href="https://ankarion.github.io">Few words about myself</a></li>
-                            <li><a href="https://t.me/Ankarion">Telegram</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
-
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
-<script type="text/javascript">
-    var disqus_shortname = 'ankarion-blog';
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
-</script>
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+      <li class="list-inline-item"><a href="https://ankarion.github.io/blog/authors.html">Authors</a></li>
+    <li class="list-inline-item"><a href="https://ankarion.github.io/blog/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="https://ankarion.github.io/blog/categories.html">Categories</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
 </body>
+
 </html>

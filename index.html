@@ -1,265 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-        <meta charset="utf-8" />
-        <title>Blog of Ankarion</title>
-        <link rel="stylesheet" href="https://ankarion.github.io/blog/theme/css/main.css" />
-        <link href="https://ankarion.github.io/blog/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog of Ankarion Atom Feed" />
 
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>  Blog of Ankarion | A blog about applied SQL/C/C++
+</title>
+  <link rel="canonical" href="https://ankarion.github.io/blog/index.html">
+
+    <link rel="apple-touch-icon" href="https://ankarion.github.io/blog/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="https://ankarion.github.io/blog/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://ankarion.github.io/blog/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="https://ankarion.github.io/blog/manifest.json">
+    <meta name="theme-color" content="#333333">
+
+  <link rel="stylesheet" href="https://ankarion.github.io/blog/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://ankarion.github.io/blog/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://ankarion.github.io/blog/theme/css/pygments/monokai.min.css">
+  <link rel="stylesheet" href="https://ankarion.github.io/blog/theme/css/theme.css">
+
+  <link rel="alternate" type="application/atom+xml" title="Full Atom Feed"
+        href="https://ankarion.github.io/blog/feeds/all.atom.xml">
+  
+    <meta name="description" content="some random text">
+
+
 </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="https://ankarion.github.io/blog/">Blog of Ankarion </a></h1>
-                <nav><ul>
-                    <li><a href="https://ankarion.github.io/blog/category/postgresql.html">PostgreSQL</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+<body>
+  <header class="header">
+    <div class="container">
+<div class="row">
+    <div class="col-sm-4">
+      <a href="https://ankarion.github.io/blog/">
+        <img class="img-fluid rounded" src=https://ankarion.github.io/blog/images/profile.jpg width=200 height=200 alt="Blog of Ankarion">
+      </a>
+    </div>
+  <div class="col-sm-8">
+    <h1 class="title"><a href="https://ankarion.github.io/blog/">Blog of Ankarion</a></h1>
+      <p class="text-muted">A blog about applied SQL/C/C++</p>
+      <ul class="list-inline">
+          <li class="list-inline-item"><a href="https://github.com/ankarion" target="_blank">Github</a></li>
+          <li class="list-inline-item"><a href="https://t.me/Ankarion" target="_blank">Telegram</a></li>
+          <li class="list-inline-item"><a href="http://python.org/" target="_blank">Python.org</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+          <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/ankarion" target="_blank"></a></li>
+      </ul>
+  </div>
+</div>    </div>
+  </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="https://ankarion.github.io/blog/transform.html">Transform</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2017-12-20T12:20:00+01:00">
-                Published: Wed 20 December 2017
-        </abbr>
+  <div class="main">
+    <div class="container">
+      <h1>  Articles
+</h1>
+      <hr>
+    <article class="row teaser">
+      <header class="col-sm-4 text-muted">
+        <ul>
+          <li title="2017-12-20T12:20:00+03:00">
+            <i class="fa fa-clock-o"></i>
+            Wed 20 December 2017
+          </li>
+          <li>
+            <i class="fa fa-folder-open-o"></i>
+            <a href="https://ankarion.github.io/blog/category/postgresql.html">PostgreSQL</a>
+          </li>
+            <li>
+              <i class="fa fa-user-o"></i>
+                <a href="https://ankarion.github.io/blog/author/bykov-anthony.html">Bykov Anthony</a>            </li>
+        </ul>
+      </header>
+      <div class="col-sm-8">
+        <h4 class="title">
+          <a href="https://ankarion.github.io/blog/transform.html">Transform</a>
+        </h4>
+        <div class="content">
+          Preface Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just googling it(even I have one in drafts). But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside triggers. After googling …
+        </div>
+      </div>
+    </article>
+    </div>
+  </div>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="https://ankarion.github.io/blog/author/bykov-anthony.html">Bykov Anthony</a>
-        </address>
-<p>In <a href="https://ankarion.github.io/blog/category/postgresql.html">PostgreSQL</a>.</p>
-
-</footer><!-- /.post-info --><script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-<h1>Preface</h1>
-<p>Jsonb is not a new feature in PostgreSQL and you can easily find some articles by just <a href="http://lmgtfy.com/?q=jsonb+postgresql">googling it</a>(even I have one in drafts). But while writing my jsonb article, I found out that I couldn't find a proper way of working with jsonb inside <a href="https://www.postgresql.org/docs/9.1/static/sql-createtrigger.html">triggers</a>.</p>
-<p>After googling for a few seconds I thought "Meh, I've tried. Maybe it is easier to write my own way of working with jsonb."</p>
-<h2>My own way of working with jsonb</h2>
-<p>So, I'm happy to introduce you the "My own way of working with jsonb". The idea is to take a json as the incoming parameter(which in perl is $_[0]) and inside the function parse it into the desired object. TA-dah!</p>
-<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">JSON</span><span class="p">;</span>
-<span class="k">my</span> <span class="nv">$hash</span> <span class="o">=</span> <span class="n">decode_json</span><span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-</pre></div>
-
-
-<p>Well... In the end, it became obvious that this is not the best solution because PostgreSQL 9.5+ provides <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">"create transform"</a> functionality which is supposed to work better.</p>
-<h1>Intro</h1>
-<p>This article is dedicated to <a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">transforms</a> and designed in order to save you from some possible mistakes. I will show what "transform" is and how to use it on a simple artificial example, at the end of this article there is a "benchmark" section which will compare <strong>jsonb + transform</strong> vs <strong>json + decode_hash</strong> (which was described in "Preface" part)</p>
-<h1>Definition</h1>
-<p><a href="https://www.postgresql.org/docs/9.5/static/sql-createtransform.html">Transforms</a> are supposed to define the way PostgreSQL object can be represented in certain language. 
-For example, we want to represent PostgreSQL type "hstore" as a perl type. This can be done through 4 lines of SQL code:</p>
-<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TRANSFORM</span> <span class="k">FOR</span> <span class="n">hstore</span> <span class="k">LANGUAGE</span> <span class="n">pl</span><span class="o">/</span><span class="n">perl</span> <span class="p">(</span>
-    <span class="k">FROM</span> <span class="k">SQL</span> <span class="k">WITH</span> <span class="k">FUNCTION</span> <span class="n">name_of_function_from_sql</span> <span class="p">(</span><span class="n">name_of_the_argument</span> <span class="p">[,</span> <span class="p">...]),</span>
-    <span class="k">TO</span> <span class="k">SQL</span> <span class="k">WITH</span> <span class="k">FUNCTION</span> <span class="n">name_of_function_to_sql</span> <span class="p">(</span><span class="n">name_of_the_argument</span> <span class="p">[,</span> <span class="p">...])</span>
-<span class="p">)</span>
-</pre></div>
-
-
-<p>The problem is that we have to define those two functions <a href="https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L68">"name_of_function_from_sql"</a> and <a href="https://github.com/postgres/postgres/blob/master/contrib/hstore_plperl/hstore_plperl.c#L101">"name_of_function_to_sql"</a>. They describe the way the object will be transformed.</p>
-<p>It is not always the easiest solution, but the good news is that some transforms are already implemented. Jsonb can be transformed <a href="https://github.com/postgrespro/jsonb_plpython">into python</a> and <a href="https://github.com/ankarion/jsonb_plperl">into perl</a> (feel free to check it out and participate in <a href="https://www.postgresql.org/message-id/flat/20171024140129.6bd01f68@anthony-24-g082ur#20171024140129.6bd01f68@anthony-24-g082ur">perl</a> and <a href="https://www.postgresql.org/message-id/flat/20171025145100.3a19933f@anthony-24-g082ur/">python</a> patch discussions). </p>
-<p>So, the only thing you need to do is to install an extension:</p>
-<div class="highlight"><pre><span></span><span class="k">create</span> <span class="n">extension</span> <span class="n">jsonb_plperl</span><span class="p">;</span>
-</pre></div>
-
-
-<p>And show that transform should be used in the definition of the function:</p>
-<div class="highlight"><pre><span></span><span class="k">TRANSFORM</span> <span class="k">FOR</span> <span class="k">TYPE</span> <span class="n">jsonb</span>
-</pre></div>
-
-
-<p>Full SQL code should look like this:</p>
-<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="n">EXTENSION</span> <span class="n">jsonb_plperl</span> <span class="k">CASCADE</span><span class="p">;</span>
-
-<span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">blah</span><span class="p">(</span><span class="n">val</span> <span class="n">jsonb</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">jsonb</span>
-<span class="k">LANGUAGE</span> <span class="n">plperl</span>
-<span class="k">TRANSFORM</span> <span class="k">FOR</span> <span class="k">TYPE</span> <span class="n">jsonb</span>
-<span class="k">AS</span> <span class="err">$$</span>
-    <span class="err">$</span><span class="n">val</span> <span class="o">=</span> <span class="err">$</span><span class="n">_</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-    <span class="p">...</span>
-    <span class="k">return</span> <span class="err">$</span><span class="n">val</span><span class="p">;</span>
-<span class="err">$$</span><span class="p">;</span>
-</pre></div>
-
-
-<h1>Benchmarks</h1>
-<p>This is the most spectacular part of this article. We are going to find out which method is better(faster) - the old one or the "transform". </p>
-<p>Benchmarking process is divided into two stages: </p>
-<ul>
-<li>the init part</li>
-<li>the workload part</li>
-</ul>
-<h2>Init</h2>
-<p>In "init" part, we initialize the functions which transforms objects into perl and then parses it back to plpgsql language:</p>
-<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="n">EXTENSION</span> <span class="n">jsonb_plperlu</span> <span class="k">CASCADE</span><span class="p">;</span>
-
-<span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">test1</span><span class="p">(</span><span class="n">val</span> <span class="n">jsonb</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="n">jsonb</span>
-<span class="k">LANGUAGE</span> <span class="n">plperlu</span>
-<span class="k">TRANSFORM</span> <span class="k">FOR</span> <span class="k">TYPE</span> <span class="n">jsonb</span>
-<span class="k">AS</span> <span class="err">$$</span>
-<span class="k">return</span> <span class="p">(</span><span class="o">%</span><span class="n">_</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-<span class="err">$$</span><span class="p">;</span>
-
-<span class="k">CREATE</span> <span class="k">FUNCTION</span> <span class="n">test2</span><span class="p">(</span><span class="n">val</span> <span class="nb">text</span><span class="p">)</span> <span class="k">RETURNS</span> <span class="nb">text</span>
-<span class="k">LANGUAGE</span> <span class="n">plperlu</span>
-<span class="k">AS</span> <span class="err">$$</span>
-<span class="n">use</span> <span class="n">JSON</span><span class="p">;</span>
-<span class="n">my</span> <span class="err">$</span><span class="n">hash</span> <span class="o">=</span> <span class="n">decode_json</span><span class="p">(</span><span class="err">$</span><span class="n">_</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-<span class="k">return</span> <span class="n">encode_json</span> <span class="err">$</span><span class="n">hash</span><span class="p">;</span>
-<span class="err">$$</span><span class="p">;</span>
-</pre></div>
-
-
-<h2>Workloads</h2>
-<p>Taking into account the init part, workloads look like:</p>
-<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">testold</span><span class="p">(</span><span class="s1">&#39;{...}&#39;</span><span class="p">::</span><span class="n">json</span><span class="p">)::</span><span class="n">json</span><span class="p">;</span>
-</pre></div>
-
-
-<p>and</p>
-<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">testnew</span><span class="p">(</span><span class="s1">&#39;{...}&#39;</span><span class="p">::</span><span class="n">jsonb</span><span class="p">);</span>
-</pre></div>
-
-
-<p>Where {...} - is json which contains strings associated with it's int representation. For example:</p>
-<div class="highlight"><pre><span></span><span class="err">{</span>
-    <span class="ss">&quot;1&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
-    <span class="ss">&quot;2&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">etc</span>
-<span class="err">}</span>
-</pre></div>
-
-
-<p><a href="https://github.com/ankarion/jsonb_plperl/blob/master/sql/bench/gen_tests.py">Here</a> you can find a python script I used to generate workloads. Important thing to note before running the script - you need to create a directory called "tests" inside the directory where gen_tests.py is located.</p>
-<h2>Results</h2>
-<script type="text/javascript">
-     var data;
-     var chart;
-
-      // Load the Visualization API and the piechart package.
-      google.charts.load('current', {'packages':['line']});
-
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.charts.setOnLoadCallback(drawChart);
-
-      // Callback that creates and populates a data table,
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function drawChart() {
-        data = new google.visualization.DataTable();
-        data.addColumn('number', 'json size');
-        data.addColumn('number', 'bad practise');
-        data.addColumn('number', 'transform');
-        data.addRows([
-          [{v:1,f:'1 object'},      {v:7.208,f:'0.007208s'}, {v:2.77,f:'0.00277s'}],
-          [{v:1001,f:'1001 objects'},   {v:53.411,f:'0.053411s'}, {v:9.285,f:'0.009285s'}],
-          [{v:2001,f:'2001 objects'},   {v:103.929,f:'0.103929s'}, {v:16.214,f:'0.016214s'}],
-          [{v:3001,f:'3001 objects'},   {v:157.989,f:'0.157989s'}, {v:25.814,f:'0.025814s'}],
-          [{v:4001,f:'4001 objects'},   {v:204.865,f:'0.204865s'}, {v:31.78,f:'0.03178s'}],
-          [{v:5001,f:'5001 objects'},   {v:259.243,f:'0.259243s'}, {v:40.423,f:'0.040423s'}],
-          [{v:6001,f:'6001 objects'},   {v:309.912,f:'0.309912s'}, {v:49.886,f:'0.049886s'}],
-          [{v:7001,f:'7001 objects'},   {v:359.798,f:'0.359798s'}, {v:53.999,f:'0.053999s'}],
-          [{v:8001,f:'8001 objects'},   {v:414.597,f:'0.414597s'}, {v:63.592,f:'0.063592s'}],
-          [{v:9001,f:'9001 objects'},   {v:481.893,f:'0.481893s'}, {v:74.574,f:'0.074574s'}],
-          [{v:10001,f:'10001 objects'}, {v:520.906,f:'0.520906s'}, {v:80.629,f:'0.080629s'}],
-          [{v:11001,f:'11001 objects'}, {v:573.934,f:'0.573934s'}, {v:87.01,f:'0.08701s'}],
-          [{v:12001,f:'12001 objects'}, {v:630.937,f:'0.630937s'}, {v:94.384,f:'0.094384s'}],
-          [{v:13001,f:'13001 objects'}, {v:686.475,f:'0.686475s'}, {v:103.035,f:'0.103035s'}],
-          [{v:14001,f:'14001 objects'}, {v:744.054,f:'0.744054s'}, {v:113.548,f:'0.113548s'}],
-          [{v:15001,f:'15001 objects'}, {v:798.305,f:'0.798305s'}, {v:116.316,f:'0.116316s'}],
-          [{v:16001,f:'16001 objects'}, {v:861.136,f:'0.861136s'}, {v:126.024,f:'0.126024s'}],
-          [{v:17001,f:'17001 objects'}, {v:916.432,f:'0.916432s'}, {v:148.425,f:'0.148425s'}],
-          [{v:18001,f:'18001 objects'}, {v:979.769,f:'0.979769s'}, {v:151.548,f:'0.151548s'}],
-          [{v:19001,f:'19001 objects'}, {v:1050.776,f:'1.050776s'}, {v:161.134,f:'0.161134s'}],
-          [{v:20001,f:'20001 objects'}, {v:1084.992,f:'1.084992s'}, {v:169.715,f:'0.169715s'}],
-          [{v:21001,f:'21001 objects'}, {v:1149.904,f:'1.149904s'}, {v:181.003,f:'0.181003s'}],
-          [{v:22001,f:'22001 objects'}, {v:1189.699,f:'1.189699s'}, {v:185.644,f:'0.185644s'}],
-          [{v:23001,f:'23001 objects'}, {v:1237.404,f:'1.237404s'}, {v:192.815,f:'0.192815s'}],
-          [{v:24001,f:'24001 objects'}, {v:1298.407,f:'1.298407s'}, {v:199.408,f:'0.199408s'}],
-          [{v:25001,f:'25001 objects'}, {v:1348.316,f:'1.348316s'}, {v:209.455,f:'0.209455s'}],
-          [{v:26001,f:'26001 objects'}, {v:1431.793,f:'1.431793s'}, {v:221.336,f:'0.221336s'}],
-          [{v:27001,f:'27001 objects'}, {v:1474.972,f:'1.474972s'}, {v:219.977,f:'0.219977s'}],
-          [{v:28001,f:'28001 objects'}, {v:1510.263,f:'1.510263s'}, {v:225.925,f:'0.225925s'}],
-          [{v:29001,f:'29001 objects'}, {v:1574.153,f:'1.574153s'}, {v:241.067,f:'0.241067s'}]
-        ]);
-
-        // Set chart options
-        var options = {
-            hAxis: {
-              title: 'Json size',
-              gridlines:{
-                count: 3,
-                color: '#CCC'
-                }
-            },
-            vAxis: {
-              title: 'Latency, msec',
-              gridlines:{
-                count: 3,
-                color: '#CCC'
-                }
-            }
-            };
-
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.charts.Line(document.getElementById('chart_div'));
-        // google.visualization.events.addListener(chart, 'select', selectHandler);
-        chart.draw(data, google.charts.Line.convertOptions(options));
-      }
-
-      function selectHandler() {
-        var selectedItem = chart.getSelection()[0];
-        var value = data.getValue(selectedItem.row, 0);
-        alert('The user selected ' + value);
-      }
-
-</script>
-
-<p><center>
-<div id="chart_div" style="width:90%; height:700"></div>
-</center></p>
-<p>On this chart, you can see how bad was my first approach in comparison with transform. The higher graph values go, the more milliseconds corresponding method worked.</p>
-<p>The "bad practice" is the first approach I've been talking about. As you can see, "transform" grows slower, which means that "transform" approach works a lot faster. This is the reason why I called "bad practice" bad.</p><p>There are <a href="https://ankarion.github.io/blog/transform.html#disqus_thread">comments</a>.</p>                </article>
-            </aside><!-- /#featured -->
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="#">You can modify those links in your config file</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-                            <li><a href="https://ankarion.github.io/blog/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
-
-                            <li><a href="https://github.com/ankarion">Github</a></li>
-                            <li><a href="https://ankarion.github.io">Few words about myself</a></li>
-                            <li><a href="https://t.me/Ankarion">Telegram</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
-
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
-<script type="text/javascript">
-    var disqus_shortname = 'ankarion-blog';
-    (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
-</script>
+  <footer class="footer">
+    <div class="container">
+<div class="row">
+  <ul class="col-sm-6 list-inline">
+      <li class="list-inline-item"><a href="https://ankarion.github.io/blog/authors.html">Authors</a></li>
+    <li class="list-inline-item"><a href="https://ankarion.github.io/blog/archives.html">Archives</a></li>
+    <li class="list-inline-item"><a href="https://ankarion.github.io/blog/categories.html">Categories</a></li>
+  </ul>
+  <p class="col-sm-6 text-sm-right text-muted">
+    Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+    / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+  </p>
+</div>    </div>
+  </footer>
 </body>
+
 </html>
